@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MusicManager Pro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>MUSIC<span>MANAGER</span></h1>
+        <div id="breadcrumb">Início</div>
+    </header>
+
+    <main class="app-container">
+        <!-- Lado Esquerdo: Navegação -->
+        <aside class="sidebar">
+            <h2 id="menu-title">Estilos Musicais</h2>
+            <ul id="lista-navegacao">
+                <!-- Inserido via JS -->
+            </ul>
+            <button id="btn-voltar" class="hidden" onclick="voltar()">⬅ Voltar</button>
+        </aside>
+
+        <!-- Lado Direito: Conteúdo -->
+        <section class="content">
+            <h2 id="content-title">Selecione um Estilo</h2>
+            <div id="grid-cards" class="grid-cards">
+                <!-- Cards de Bandas ou Músicas aparecerão aqui -->
+            </div>
+        </section>
+    </main>
+
+    <script src="dados.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
