@@ -1,11 +1,14 @@
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyKqlf8mNNSIjAwXt5nC18BZC9nXFgCZOGH3XIq-TDtH9qW_-n2rpRF0gCUIfJOPZwJ/exec";
 
+// IMPORTANTE: Se os arquivos estiverem em uma pasta chamada 'media', use 'media/' no caminho.
+const BASE_URL = "./"; 
+
 const app = {
     data: null,
     view: 'estilos',
     currentStyle: null,
     currentBanda: null,
-    ids: { main: null, bt: null },
+    links: { pdf: "", main: "", bt: "" },
 
     async init() {
         const response = await fetch(SCRIPT_URL);
@@ -49,12 +52,13 @@ const app = {
         this.parar('bt');
         this.toggleUI('player');
         document.getElementById('musica-titulo').innerText = m.titulo;
-        document.getElementById('link-cifra').href = `https://drive.google.com/file/d/${m.letra}/view?usp=sharing`;
-        
-        this.ids.main = m.musica;
-        this.ids.bt = m.bt;
-        
-        // Reseta as fontes para forçar novo carregamento ao dar Play
+
+        // Aqui o script busca os arquivos no seu GitHub usando o nome do arquivo que vem do seu JSON
+        // Certifique-se de que o seu JSON no Apps Script agora retorne o NOME DO ARQUIVO (ex: gita.mp3) em vez do ID do Drive.
+        document.getElementById('link-pdf').href = BASE_URL + m.letra;
+        this.links.main = BASE_URL + m.musica;
+        this.links.bt = BASE_URL + m.bt;
+
         document.getElementById('audio-main-el').src = "";
         document.getElementById('audio-bt-el').src = "";
     },
@@ -62,7 +66,6 @@ const app = {
     tocar(tipo) {
         const audio = document.getElementById(`audio-${tipo}-el`);
         const btn = document.getElementById(`play-${tipo}`);
-        const id = this.ids[tipo];
 
         if (!audio.paused && audio.src !== "") {
             audio.pause();
@@ -70,34 +73,22 @@ const app = {
             return;
         }
 
-        // Se a fonte estiver vazia, define o link de download direto do Google Drive
-        if (audio.src === "" || audio.src === window.location.href) {
-            btn.innerText = "⏳ CARREGANDO...";
-            // O parâmetro &confirm=no ajuda a pular telas de aviso de vírus em arquivos pequenos
-            audio.src = `https://docs.google.com/uc?export=download&id=${id}&confirm=no`;
+        if (audio.src === "" || audio.src.includes(window.location.pathname)) {
+            audio.src = this.links[tipo];
             audio.load();
         }
 
         audio.play().then(() => {
             btn.innerText = "⏸ PAUSE";
-            // Para o outro áudio
             const outro = tipo === 'main' ? 'bt' : 'main';
             this.parar(outro);
-        }).catch(err => {
-            console.error("Erro ao tocar áudio:", err);
-            // Tenta o fallback imediato para o link de imagem de mídia
-            audio.src = `https://lh3.googleusercontent.com/d/${id}`;
-            audio.play().then(() => btn.innerText = "⏸ PAUSE");
-        });
+        }).catch(err => console.error("Erro ao tocar arquivo do GitHub:", err));
     },
 
     parar(tipo) {
         const audio = document.getElementById(`audio-${tipo}-el`);
         const btn = document.getElementById(`play-${tipo}`);
-        if(audio) {
-            audio.pause();
-            audio.currentTime = 0;
-        }
+        if(audio) { audio.pause(); audio.currentTime = 0; }
         if(btn) btn.innerText = "▶ PLAY";
     },
 
@@ -127,7 +118,7 @@ const app = {
         }
     },
 
-    irParaInicio() { this.renderEstilos(); },
+    irParaInicio() { location.reload(); },
 
     voltar() {
         if (this.view === 'musicas') this.carregarBandas(this.currentStyle);
