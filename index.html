@@ -2,25 +2,45 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Portal Garage Band - Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Garage Band - Mário Cravo</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <aside class="sidebar-professional">
-        <div class="box-header">
-            <h2 class="neon-blue">ESTILO MUSICAL</h2>
-        </div>
-        <!-- Quadro com os estilos injetados pelo script -->
-        <nav id="quadro-estilos" class="lista-estilos"></nav>
+    <aside class="sidebar">
+        <h2 class="menu-label">MENU</h2>
+        <nav id="nav-content" class="nav-list"></nav>
     </aside>
 
-    <main class="stage-container">
-        <h1 class="titulo-portal">PORTAL GARAGE BAND MÁRIO CRAVO</h1>
+    <main class="main-stage">
+        <button id="btn-voltar" class="btn-neon-pink" onclick="app.voltar()">⬅ VOLTAR</button>
         
-        <!-- Moldura de Fogo Profissional -->
-        <div class="moldura-fogo">
-            <div class="vidro-interno">
-                <img src="https://lh3.googleusercontent.com/d/1gn2p3EF0fnJo5YC1KqAmHc5ELclpZvzF" alt="Banner Garage Band">
+        <div id="welcome-screen">
+            <div class="neon-title">PORTAL GARAGE BAND<br>MÁRIO CRAVO</div>
+            <!-- A imagem ChatGPT Image 2 de mai. de 2026, 09_26_10.jpg é o background do Main Stage no CSS -->
+        </div>
+
+        <div id="player" class="player-glass">
+            <h2 id="musica-titulo" class="neon-text-blue">Nome da Música</h2>
+            <div class="player-body">
+                <section class="pdf-section">
+                    <p class="label">📄 LETRA (PDF)</p>
+                    <iframe id="pdf-viewer" src=""></iframe>
+                </section>
+                
+                <section class="audio-section">
+                    <p class="label">🎵 MIXAGEM & PLAYBACK</p>
+                    <div class="audio-grid">
+                        <div class="audio-card">
+                            <span>Original</span>
+                            <audio id="audio-main" controls></audio>
+                        </div>
+                        <div class="audio-card">
+                            <span>Backtracking</span>
+                            <audio id="audio-bt" controls></audio>
+                        </div>
+                    </div>
+                </section>
             </div>
         </div>
     </main>
