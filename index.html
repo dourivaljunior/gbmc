@@ -29,31 +29,25 @@
             <h2 id="musica-titulo" class="neon-text-blue">NOME DA MÚSICA</h2>
             
             <div class="horizontal-control-panel">
-                <!-- Célula 1: Música Cifrada (Link Direto) -->
                 <div class="control-cell">
                     <p class="cell-label">CONTEÚDO</p>
-                    <a id="link-cifra" href="https://drive.google.com/file/d/1lK1CSqkQBj5FcUFMac24HqfCtw4OkFKY/view?usp=drive_link" target="_blank" class="btn-action-neon">📄 MÚSICA CIFRADA</a>
-                    <p class="sub-label">(Clique para abrir PDF)</p>
+                    <a id="link-cifra" href="#" target="_blank" class="btn-action-neon">📄 MÚSICA CIFRADA</a>
                 </div>
 
-                <!-- Célula 2: Música Original (Execução na Webpage) -->
                 <div class="control-cell">
                     <p class="cell-label">MÚSICA ORIGINAL</p>
                     <div class="audio-controls">
-                        <button onclick="app.playAudio('audio-main')" class="btn-play">▶ PLAY</button>
-                        <button onclick="app.stopAudio('audio-main')" class="btn-stop">■ STOP</button>
+                        <button id="play-main" onclick="app.handleAudio('main')" class="btn-play">▶ PLAY</button>
+                        <button onclick="app.stopAudio('main')" class="btn-stop">■ STOP</button>
                     </div>
-                    <audio id="audio-main"></audio>
                 </div>
 
-                <!-- Célula 3: Back Track (Execução na Webpage) -->
                 <div class="control-cell">
                     <p class="cell-label">BACK TRACKING</p>
                     <div class="audio-controls">
-                        <button onclick="app.playAudio('audio-bt')" class="btn-play">▶ PLAY</button>
-                        <button onclick="app.stopAudio('audio-bt')" class="btn-stop">■ STOP</button>
+                        <button id="play-bt" onclick="app.handleAudio('bt')" class="btn-play">▶ PLAY</button>
+                        <button onclick="app.stopAudio('bt')" class="btn-stop">■ STOP</button>
                     </div>
-                    <audio id="audio-bt"></audio>
                 </div>
             </div>
         </div>
