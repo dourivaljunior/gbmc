@@ -1,33 +1,65 @@
-<!-- Player Reformulado em Box Horizontal -->
-<div id="player" class="player-glass">
-    <h2 id="musica-titulo" class="neon-text-blue">NOME DA MÚSICA</h2>
-    
-    <div class="horizontal-control-panel">
-        <!-- Célula 1: Letra/Cifra -->
-        <div class="control-cell">
-            <p class="cell-label">CONTEÚDO</p>
-            <a id="link-cifra" href="#" target="_blank" class="btn-action-neon">📄 MÚSICA CIFRADA</a>
-            <p class="sub-label">(Clique para abrir PDF)</p>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Garage Band - Mário Cravo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <h2 class="menu-label">ESTILO MUSICAL</h2>
+        <nav id="nav-content" class="nav-list"></nav>
+    </aside>
+
+    <main class="main-stage">
+        <div class="nav-controls">
+            <button id="btn-voltar" class="btn-neon-blue" onclick="app.voltar()">⬅ VOLTAR</button>
+            <button id="btn-inicio" class="btn-neon-blue" onclick="app.irParaInicio()">🏠 INÍCIO</button>
+        </div>
+        
+        <div id="welcome-screen">
+            <div class="neon-title-small">PORTAL GARAGE BAND MÁRIO CRAVO</div>
+            <div class="image-box">
+                <img src="https://lh3.googleusercontent.com/d/1gn2p3EF0fnJo5YC1KqAmHc5ELclpZvzF" alt="Garage Band">
+            </div>
         </div>
 
-        <!-- Célula 2: Música Original -->
-        <div class="control-cell">
-            <p class="cell-label">MÚSICA ORIGINAL</p>
-            <div class="audio-controls">
-                <button onclick="app.playAudio('audio-main')" class="btn-play">▶ PLAY</button>
-                <button onclick="app.stopAudio('audio-main')" class="btn-stop">■ STOP</button>
-            </div>
-            <audio id="audio-main"></audio>
-        </div>
+        <!-- PLAYER COM PAINEL HORIZONTAL DE 3 CÉLULAS -->
+        <div id="player" class="player-glass">
+            <h2 id="musica-titulo" class="neon-text-blue">NOME DA MÚSICA</h2>
+            
+            <div class="horizontal-control-panel">
+                <!-- Célula 1: Conteúdo/Cifra -->
+                <div class="control-cell">
+                    <p class="cell-label">CONTEÚDO</p>
+                    <a id="link-cifra" href="#" target="_blank" class="btn-action-neon">📄 MÚSICA CIFRADA</a>
+                    <p class="sub-label">(Clique para abrir PDF)</p>
+                </div>
 
-        <!-- Célula 3: Backtrack -->
-        <div class="control-cell">
-            <p class="cell-label">BACK TRACKING</p>
-            <div class="audio-controls">
-                <button onclick="app.playAudio('audio-bt')" class="btn-play">▶ PLAY</button>
-                <button onclick="app.stopAudio('audio-bt')" class="btn-stop">■ STOP</button>
+                <!-- Célula 2: Original -->
+                <div class="control-cell">
+                    <p class="cell-label">MÚSICA ORIGINAL</p>
+                    <div class="audio-controls">
+                        <button onclick="app.playAudio('audio-main')" class="btn-play">▶ PLAY</button>
+                        <button onclick="app.stopAudio('audio-main')" class="btn-stop">■ STOP</button>
+                    </div>
+                    <audio id="audio-main"></audio>
+                </div>
+
+                <!-- Célula 3: Backtrack -->
+                <div class="control-cell">
+                    <p class="cell-label">BACK TRACKING</p>
+                    <div class="audio-controls">
+                        <button onclick="app.playAudio('audio-bt')" class="btn-play">▶ PLAY</button>
+                        <button onclick="app.stopAudio('audio-bt')" class="btn-stop">■ STOP</button>
+                    </div>
+                    <audio id="audio-bt"></audio>
+                </div>
             </div>
-            <audio id="audio-bt"></audio>
         </div>
-    </div>
-</div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
