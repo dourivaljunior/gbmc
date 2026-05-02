@@ -7,8 +7,7 @@
 </head>
 <body>
     <aside class="sidebar">
-        <h2 class="menu-label">ESTILO MUSICAL</h2>
-        <nav id="nav-content"></nav>
+        <div id="nav-content"></div>
     </aside>
 
     <main class="main-stage">
@@ -18,10 +17,7 @@
         </div>
         
         <div id="welcome-screen">
-            <div class="neon-title-small">PORTAL GARAGE BAND MÁRIO CRAVO</div>
-            <div class="image-box">
-                <img src="https://lh3.googleusercontent.com/d/1gn2p3EF0fnJo5YC1KqAmHc5ELcl1" alt="Garage Band">
-            </div>
+            <h1 class="neon-title-small">PORTAL GARAGE BAND MÁRIO CRAVO</h1>
         </div>
 
         <div id="player" class="player-glass" style="display: none;">
@@ -52,9 +48,9 @@
         </div>
     </main>
 
-    <!-- Tags de áudio essenciais -->
-    <audio id="audio-main-el" preload="auto"></audio>
-    <audio id="audio-bt-el" preload="auto"></audio>
+    <!-- Sem preload para não irritar o navegador -->
+    <audio id="audio-main-el"></audio>
+    <audio id="audio-bt-el"></audio>
 
     <script src="script.js"></script>
 </body>
