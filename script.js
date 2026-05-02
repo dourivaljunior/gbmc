@@ -15,7 +15,7 @@ const app = {
         this.view = 'estilos';
         this.toggleUI('welcome');
         const nav = document.getElementById('nav-content');
-        nav.innerHTML = '<h2 class="menu-label">ESTILOS</h2>';
+        nav.innerHTML = '<h2 style="color:#00f2ff">ESTILOS</h2>';
         Object.keys(this.data).forEach(estilo => {
             nav.appendChild(this.createNavItem(estilo, () => this.carregarBandas(estilo)));
         });
@@ -25,7 +25,7 @@ const app = {
         this.view = 'bandas';
         this.currentStyle = estilo;
         const nav = document.getElementById('nav-content');
-        nav.innerHTML = `<h2 class="menu-label">${estilo}</h2>`;
+        nav.innerHTML = `<h2 style="color:#00f2ff">${estilo}</h2>`;
         Object.keys(this.data[estilo]).forEach(banda => {
             nav.appendChild(this.createNavItem(banda, () => this.carregarMusicas(banda)));
         });
@@ -35,7 +35,7 @@ const app = {
         this.view = 'musicas';
         this.currentBanda = banda;
         const nav = document.getElementById('nav-content');
-        nav.innerHTML = `<h2 class="menu-label">${banda}</h2>`;
+        nav.innerHTML = `<h2 style="color:#00f2ff">${banda}</h2>`;
         this.data[this.currentStyle][banda].forEach(m => {
             nav.appendChild(this.createNavItem(m.titulo, () => this.abrirPlayer(m)));
         });
@@ -44,49 +44,63 @@ const app = {
     abrirPlayer(m) {
         this.parar('main');
         this.parar('bt');
-        document.getElementById('player').style.display = 'block';
-        document.getElementById('welcome-screen').style.display = 'none';
+        this.toggleUI('player');
         document.getElementById('musica-titulo').innerText = m.titulo;
         document.getElementById('link-cifra').href = m.letra;
         
+        // Apenas guarda os nomes, NÃO carrega ainda
         this.files.main = m.musica;
         this.files.bt = m.bt;
 
-        // Limpa fontes anteriores para evitar lixo na memória
-        document.getElementById('audio-main-el').removeAttribute('src');
-        document.getElementById('audio-bt-el').removeAttribute('src');
+        // Reseta as tags de áudio
+        document.getElementById('audio-main-el').src = "";
+        document.getElementById('audio-bt-el').src = "";
     },
 
-    async tocar(tipo) {
+    tocar(tipo) {
         const audio = document.getElementById(`audio-${tipo}-el`);
         const btn = document.getElementById(`play-${tipo}`);
-        const src = this.files[tipo];
+        const fileName = this.files[tipo];
 
-        if (!audio.paused && audio.src.includes(src)) {
-            audio.pause();
-            btn.innerText = "▶ PLAY";
+        // Se já estiver tocando o arquivo correto, faz o pause/play simples
+        if (audio.src.includes(fileName) && audio.readyState >= 2) {
+            if (audio.paused) {
+                audio.play();
+                btn.innerText = "⏸ PAUSE";
+                this.parar(tipo === 'main' ? 'bt' : 'main');
+            } else {
+                audio.pause();
+                btn.innerText = "▶ PLAY";
+            }
             return;
         }
 
-        // Força a carga do arquivo se o src estiver vazio ou for diferente
-        if (!audio.src || !audio.src.includes(src)) {
-            audio.src = src;
-            audio.load();
-        }
+        // Se for a primeira vez ou troca de arquivo, força o carregamento
+        btn.innerText = "⏳...";
+        audio.src = fileName;
+        audio.load();
 
-        try {
-            await audio.play();
+        // Evento que dispara assim que o navegador consegue tocar
+        audio.oncanplaythrough = () => {
+            audio.play();
             btn.innerText = "⏸ PAUSE";
             this.parar(tipo === 'main' ? 'bt' : 'main');
-        } catch (e) {
-            alert("Erro ao tocar: Verifique se o arquivo " + src + " está na pasta.");
-        }
+            audio.oncanplaythrough = null; // Limpa o evento
+        };
+
+        audio.onerror = () => {
+            alert("Erro: Arquivo " + fileName + " não encontrado no GitHub.");
+            btn.innerText = "▶ PLAY";
+        };
     },
 
     parar(tipo) {
         const audio = document.getElementById(`audio-${tipo}-el`);
         const btn = document.getElementById(`play-${tipo}`);
-        if(audio) { audio.pause(); audio.currentTime = 0; }
+        if(audio) {
+            audio.pause();
+            audio.currentTime = 0;
+        }
         if(btn) btn.innerText = "▶ PLAY";
     },
 
