@@ -37,21 +37,25 @@
                 <div class="control-cell">
                     <p class="cell-label">MÚSICA ORIGINAL</p>
                     <div class="audio-controls">
-                        <button id="play-main" onclick="app.tocarAudio('main')" class="btn-play">▶ PLAY</button>
-                        <button onclick="app.pararAudio('main')" class="btn-stop">■ STOP</button>
+                        <button id="play-main" onclick="app.tocar('main')" class="btn-play">▶ PLAY</button>
+                        <button onclick="app.parar('main')" class="btn-stop">■ STOP</button>
                     </div>
                 </div>
 
                 <div class="control-cell">
                     <p class="cell-label">BACK TRACKING</p>
                     <div class="audio-controls">
-                        <button id="play-bt" onclick="app.tocarAudio('bt')" class="btn-play">▶ PLAY</button>
-                        <button onclick="app.pararAudio('bt')" class="btn-stop">■ STOP</button>
+                        <button id="play-bt" onclick="app.tocar('bt')" class="btn-play">▶ PLAY</button>
+                        <button onclick="app.parar('bt')" class="btn-stop">■ STOP</button>
                     </div>
                 </div>
             </div>
         </div>
     </main>
+
+    <!-- Tags de áudio ocultas para controle via JS -->
+    <audio id="audio-main-el"></audio>
+    <audio id="audio-bt-el"></audio>
 
     <script src="script.js"></script>
 </body>
