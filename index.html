@@ -8,18 +8,26 @@
 </head>
 <body>
     <aside class="sidebar">
-        <h2 class="menu-label">MENU</h2>
+        <h2 class="menu-label">ESTILO MUSICAL</h2>
         <nav id="nav-content" class="nav-list"></nav>
     </aside>
 
     <main class="main-stage">
-        <button id="btn-voltar" class="btn-neon-pink" onclick="app.voltar()">⬅ VOLTAR</button>
+        <!-- Barra de Navegação Superior -->
+        <div class="nav-controls">
+            <button id="btn-voltar" class="btn-neon-blue" onclick="app.voltar()">⬅ VOLTAR</button>
+            <button id="btn-inicio" class="btn-neon-blue" onclick="app.irParaInicio()">🏠 INÍCIO</button>
+        </div>
         
+        <!-- Tela de Boas-Vindas -->
         <div id="welcome-screen">
-            <div class="neon-title">PORTAL GARAGE BAND<br>MÁRIO CRAVO</div>
-            <!-- A imagem ChatGPT Image 2 de mai. de 2026, 09_26_10.jpg é o background do Main Stage no CSS -->
+            <div class="neon-title-small">PORTAL GARAGE BAND MÁRIO CRAVO</div>
+            <div class="image-box">
+                <img src="https://lh3.googleusercontent.com/d/1gn2p3EF0fnJo5YC1KqAmHc5ELclpZvzF" alt="Garage Band">
+            </div>
         </div>
 
+        <!-- Player -->
         <div id="player" class="player-glass">
             <h2 id="musica-titulo" class="neon-text-blue">Nome da Música</h2>
             <div class="player-body">
