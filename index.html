@@ -2,63 +2,21 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Garage Band - Mário Cravo</title>
+    <title>Portal Garage Band - Home</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <!-- BARRA LATERAL (FIXA) -->
     <aside class="sidebar">
-        <h2 class="neon-text-blue">ESTILO MUSICAL</h2>
-        <nav id="menu-estilos" class="nav-container">
-            <!-- Injetado via script.js -->
-        </nav>
+        <h2 style="color:var(--neon-blue)">ESTILO MUSICAL</h2>
+        <div id="container-estilos"></div>
     </aside>
 
-    <!-- PALCO PRINCIPAL -->
-    <main class="main-stage" id="main-stage">
+    <main class="main-stage">
+        <h1 style="text-shadow: 0 0 20px var(--neon-blue); font-size: 3rem;">PORTAL GARAGE BAND MÁRIO CRAVO</h1>
         
-        <!-- BOTÕES DE NAVEGAÇÃO -->
-        <div class="nav-controls">
-            <button id="btn-inicio" class="btn-nav" onclick="app.irParaInicio()">🏠 INÍCIO</button>
-            <button id="btn-voltar" class="btn-nav" onclick="app.voltar()">⬅ VOLTAR</button>
+        <div class="fire-box">
+            <img src="https://lh3.googleusercontent.com/d/1gn2p3EF0fnJo5YC1KqAmHc5ELclpZvzF" alt="Garage Band">
         </div>
-
-        <!-- TELA 1: BOAS-VINDAS (INDEX) -->
-        <section id="view-inicio" class="view">
-            <div class="neon-title">PORTAL GARAGE BAND<br>MÁRIO CRAVO</div>
-            <div class="welcome-banner">
-                <img src="https://lh3.googleusercontent.com/d/1gn2p3EF0fnJo5YC1KqAmHc5ELclpZvzF" alt="Garage Band" class="main-img">
-            </div>
-        </section>
-
-        <!-- TELA 2: LISTA DE BANDAS -->
-        <section id="view-bandas" class="view hidden">
-            <h2 id="titulo-estilo" class="view-header"></h2>
-            <div id="grid-bandas" class="grid-layout"></div>
-        </section>
-
-        <!-- TELA 3: PLAYER DE MÚSICAS -->
-        <section id="view-player" class="view hidden">
-            <h2 id="titulo-musica" class="view-header neon-text-pink"></h2>
-            <div class="player-container">
-                <div class="pdf-box">
-                    <iframe id="pdf-frame" src=""></iframe>
-                </div>
-                <div class="audio-box">
-                    <div class="audio-track">
-                        <span>ORIGINAL</span>
-                        <audio id="audio-orig" controls></audio>
-                    </div>
-                    <div class="audio-track">
-                        <span>BACKTRACKING</span>
-                        <audio id="audio-bt" controls></audio>
-                    </div>
-                </div>
-            </div>
-        </section>
-
     </main>
 
     <script src="script.js"></script>
