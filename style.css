@@ -1,127 +1,103 @@
 :root {
-    --neon-blue: #00f2ff;
-    --fire-orange: #ff4500;
-    --fire-yellow: #ffec00;
+    --neon: #00f2ff;
+    --fogo-base: #ff4500;
+    --fogo-brilho: #ffec00;
 }
 
 body {
     background: #000;
-    color: white;
-    font-family: 'Segoe UI', sans-serif;
+    color: #fff;
     margin: 0;
     display: flex;
     height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
     overflow: hidden;
 }
 
-/* QUADRO À ESQUERDA (ESTILOS) */
-.sidebar {
-    width: 300px;
-    background: rgba(10, 10, 10, 0.9);
-    border-right: 3px solid var(--neon-blue);
-    padding: 20px;
-    box-shadow: 10px 0 20px rgba(0, 242, 255, 0.2);
-    z-index: 100;
+/* QUADRO DA ESQUERDA - ESTILOS */
+.sidebar-professional {
+    width: 320px;
+    background: linear-gradient(180deg, #050505 0%, #111 100%);
+    border-right: 3px solid var(--neon);
+    box-shadow: 10px 0 30px rgba(0, 242, 255, 0.2);
+    display: flex;
+    flex-direction: column;
 }
 
-.box-estilo {
-    padding: 15px;
-    margin-bottom: 15px;
-    border: 2px solid var(--neon-blue);
+.box-header {
+    padding: 30px;
+    text-align: center;
+    border-bottom: 2px solid var(--neon);
+    text-shadow: 0 0 10px var(--neon);
+}
+
+.item-estilo {
+    padding: 20px;
+    margin: 15px;
+    border: 2px solid var(--neon);
+    background: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
     text-align: center;
     font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-    background: rgba(0, 242, 255, 0.05);
+    transition: 0.4s;
     text-transform: uppercase;
 }
 
-.box-estilo:hover {
-    background: var(--neon-blue);
+.item-estilo:hover {
+    background: var(--neon);
     color: #000;
-    box-shadow: 0 0 20px var(--neon-blue);
+    box-shadow: 0 0 25px var(--neon);
 }
 
-/* QUADRO À DIREITA (STAGE) */
-.main-stage {
+/* STAGE E MOLDURA DE FOGO */
+.stage-container {
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 20px;
     background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
-    position: relative;
 }
 
-/* MOLDURA DE FOGO PROFISSIONAL */
-.fire-box {
-    position: relative;
+.titulo-portal {
+    font-size: 3.2rem;
+    margin-bottom: 40px;
+    text-shadow: 0 0 20px var(--neon);
+}
+
+.moldura-fogo {
     padding: 10px;
-    background: linear-gradient(0deg, var(--fire-orange), var(--fire-yellow));
-    border-radius: 8px;
-    animation: fire-flicker 0.5s infinite alternate;
-    box-shadow: 0 0 40px var(--fire-orange), 0 0 80px rgba(255, 69, 0, 0.4);
+    background: linear-gradient(0deg, var(--fogo-base), var(--fogo-brilho));
+    border-radius: 12px;
+    animation: pulsar-fogo 0.4s infinite alternate;
 }
 
-.fire-box img, .fire-box .content-inner {
-    display: block;
-    border-radius: 4px;
+.vidro-interno {
     background: #000;
-    width: 100%;
+    padding: 5px;
+    border-radius: 8px;
+}
+
+.vidro-interno img {
     max-width: 600px;
-    max-height: 70vh;
+    max-height: 60vh; /* Mantém dentro da página */
+    display: block;
+    border-radius: 5px;
 }
 
-@keyframes fire-flicker {
-    0% { transform: scale(1); box-shadow: 0 0 40px var(--fire-orange); }
-    100% { transform: scale(1.01); box-shadow: 0 0 60px var(--fire-yellow); }
+@keyframes pulsar-fogo {
+    from { box-shadow: 0 0 20px var(--fogo-base), 0 0 40px var(--fogo-base); }
+    to { box-shadow: 0 0 50px var(--fogo-brilho), 0 0 90px var(--fogo-base); }
 }
 
-/* BOTÕES DE NAVEGAÇÃO */
-.nav-buttons {
+/* BOTÕES NAVEGAÇÃO PAGINAS */
+.btn-voltar {
     position: absolute;
     top: 20px;
     right: 20px;
-}
-
-.btn-nav {
+    border: 2px solid var(--neon);
     background: none;
-    border: 2px solid var(--neon-blue);
-    color: var(--neon-blue);
+    color: var(--neon);
     padding: 10px 20px;
     cursor: pointer;
-    margin-left: 10px;
-    font-weight: bold;
-}
-
-.btn-nav:hover {
-    background: var(--neon-blue);
-    color: #000;
-}
-
-/* BOXES CINTILANTES (PAG 1) */
-.grid-bandas {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    width: 100%;
-}
-
-.cintilante {
-    padding: 30px;
-    border-radius: 10px;
-    text-align: center;
-    font-size: 1.2rem;
-    font-weight: bold;
-    border: 2px solid #fff;
-    animation: shine 2s infinite;
-    cursor: pointer;
-}
-
-@keyframes shine {
-    0% { border-color: #ff00e6; box-shadow: 0 0 10px #ff00e6; }
-    33% { border-color: #00f2ff; box-shadow: 0 0 20px #00f2ff; }
-    66% { border-color: #39ff14; box-shadow: 0 0 10px #39ff14; }
-    100% { border-color: #ff00e6; box-shadow: 0 0 10px #ff00e6; }
 }
