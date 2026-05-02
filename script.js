@@ -1,5 +1,5 @@
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyKqlf8mNNSIjAwXt5nC18BZC9nXFgCZOGH3XIq-TDtH9qW_-n2rpRF0gCUIfJOPZwJ/exec";
-const DRIVE_RAW = "https://lh3.googleusercontent.com/d/";
+const DRIVE_DIRECT = "https://lh3.googleusercontent.com/d/";
 
 const app = {
     data: null,
@@ -8,9 +8,13 @@ const app = {
     currentBanda: null,
 
     async init() {
-        const response = await fetch(SCRIPT_URL);
-        this.data = await response.json();
-        this.renderEstilos();
+        try {
+            const response = await fetch(SCRIPT_URL);
+            this.data = await response.json();
+            this.renderEstilos();
+        } catch (error) {
+            console.error("Erro ao carregar dados da API:", error);
+        }
     },
 
     renderEstilos() {
@@ -28,7 +32,7 @@ const app = {
         this.currentStyle = estilo;
         this.toggleUI('nav-btns');
         const nav = document.getElementById('nav-content');
-        nav.innerHTML = `<h3 style="color:var(--neon-blue)">${estilo}</h3>`;
+        nav.innerHTML = `<h3 style="color:var(--neon-blue); text-align:center;">${estilo}</h3>`;
         Object.keys(this.data[estilo]).forEach(banda => {
             nav.appendChild(this.createNavItem(banda, () => this.carregarMusicas(banda)));
         });
@@ -38,7 +42,7 @@ const app = {
         this.view = 'musicas';
         this.currentBanda = banda;
         const nav = document.getElementById('nav-content');
-        nav.innerHTML = `<h3 style="color:var(--neon-blue)">${banda}</h3>`;
+        nav.innerHTML = `<h3 style="color:var(--neon-blue); text-align:center;">${banda}</h3>`;
         this.data[this.currentStyle][banda].forEach(m => {
             nav.appendChild(this.createNavItem(m.titulo, () => this.abrirPlayer(m)));
         });
@@ -48,23 +52,35 @@ const app = {
         this.toggleUI('player');
         document.getElementById('musica-titulo').innerText = m.titulo;
         
-        // Link Cifra (Abre em nova aba)
-        document.getElementById('link-cifra').href = "https://drive.google.com/file/d/1lK1CSqkQBj5FcUFMac24HqfCtw4OkFKY/view?usp=drive_link";
+        // Link Cifra: Abre a visualização do Drive em nova aba
+        document.getElementById('link-cifra').href = `https://drive.google.com/file/d/${m.letra}/view?usp=sharing`;
         
-        // Áudios (Carrega ID para execução direta via DRIVE_RAW)
-        document.getElementById('audio-main').src = "https://drive.google.com/uc?export=download&id=1P0s4L_Dikx6M5-YeQokr91jJV1yGzdlt";
-        document.getElementById('audio-bt').src = "https://drive.google.com/uc?export=download&id=1ElNBgH5smow5lo7oYxfxUPYQOTzpQA5O";
+        // Configuração dos Áudios para execução interna
+        const audioMain = document.getElementById('audio-main');
+        const audioBt = document.getElementById('audio-bt');
+
+        audioMain.src = DRIVE_DIRECT + m.musica;
+        audioBt.src = DRIVE_DIRECT + m.bt;
+
+        audioMain.load();
+        audioBt.load();
     },
 
     playAudio(id) { 
-        const a = document.getElementById(id);
-        a.play(); 
+        const audio = document.getElementById(id);
+        
+        // Pausa outros áudios para evitar sobreposição
+        document.querySelectorAll('audio').forEach(a => {
+            if(a.id !== id) { a.pause(); a.currentTime = 0; }
+        });
+
+        audio.play().catch(e => console.error("Erro ao tocar áudio. Verifique as permissões do link no Drive.", e));
     },
-    
+
     stopAudio(id) { 
-        const a = document.getElementById(id);
-        a.pause();
-        a.currentTime = 0;
+        const audio = document.getElementById(id);
+        audio.pause();
+        audio.currentTime = 0;
     },
 
     createNavItem(text, action) {
