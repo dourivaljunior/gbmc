@@ -8,7 +8,7 @@ const app = {
     async init() {
         const res = await fetch(SCRIPT_URL);
         this.dados = await res.json();
-        this.renderMenu();
+        this.renderMenu(); 
     },
 
     renderMenu() {
