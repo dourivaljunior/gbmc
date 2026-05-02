@@ -1,106 +1,35 @@
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyKqlf8mNNSIjAwXt5nC18BZC9nXFgCZOGH3XIq-TDtH9qW_-n2rpRF0gCUIfJOPZwJ/exec";
-const DRIVE_RAW = "https://lh3.googleusercontent.com/d/";
-
 const app = {
-    data: null,
-    view: 'estilos',
-    currentStyle: null,
-    currentBanda: null,
-
-    async init() {
-        const response = await fetch(SCRIPT_URL);
-        this.data = await response.json();
-        this.renderEstilos();
-    },
-
-    renderEstilos() {
-        this.view = 'estilos';
-        this.toggleUI('welcome');
-        const nav = document.getElementById('nav-content');
-        nav.innerHTML = '';
-        
-        Object.keys(this.data).forEach(estilo => {
-            const el = this.createNavItem(estilo, () => this.carregarBandas(estilo));
-            nav.appendChild(el);
-        });
-    },
-
-    carregarBandas(estilo) {
-        this.view = 'bandas';
-        this.currentStyle = estilo;
-        this.toggleUI('nav-btns'); // Mostra voltar e início
-        const nav = document.getElementById('nav-content');
-        nav.innerHTML = `<h3 style="color:var(--neon-blue); text-align:center">${estilo}</h3>`;
-        
-        Object.keys(this.data[estilo]).forEach(banda => {
-            const el = this.createNavItem(banda, () => this.carregarMusicas(banda));
-            nav.appendChild(el);
-        });
-    },
-
-    carregarMusicas(banda) {
-        this.view = 'musicas';
-        this.currentBanda = banda;
-        this.toggleUI('nav-btns');
-        const nav = document.getElementById('nav-content');
-        nav.innerHTML = `<h3 style="color:var(--neon-blue); text-align:center">${banda}</h3>`;
-        
-        this.data[this.currentStyle][banda].forEach(m => {
-            const el = this.createNavItem(m.titulo, () => this.abrirPlayer(m));
-            nav.appendChild(el);
-        });
-    },
+    // ... (restante do código anterior mantido)
 
     abrirPlayer(m) {
         this.toggleUI('player');
         document.getElementById('musica-titulo').innerText = m.titulo;
-        document.getElementById('pdf-viewer').src = `https://docs.google.com/viewer?srcid=${m.letra}&embedded=true`;
+        
+        // Link para a Cifra (PDF)
+        const linkCifra = document.getElementById('link-cifra');
+        linkCifra.href = `https://docs.google.com/viewer?srcid=${m.letra}&pid=explorer&efp=true&a=v&chrome=false&embedded=true`;
+
+        // Configuração dos Audios
         document.getElementById('audio-main').src = DRIVE_RAW + m.musica;
         document.getElementById('audio-bt').src = DRIVE_RAW + m.bt;
     },
 
-    createNavItem(text, action) {
-        const div = document.createElement('div');
-        div.className = 'nav-item';
-        div.innerText = text;
-        div.onclick = action;
-        return div;
+    // Funções de Controle Profissional
+    playAudio(id) {
+        const audio = document.getElementById(id);
+        // Para todas as outras músicas antes de tocar a nova (opcional)
+        document.querySelectorAll('audio').forEach(a => {
+            a.pause();
+            a.currentTime = 0;
+        });
+        audio.play();
     },
 
-    toggleUI(mode) {
-        const welcome = document.getElementById('welcome-screen');
-        const player = document.getElementById('player');
-        const backBtn = document.getElementById('btn-voltar');
-        const homeBtn = document.getElementById('btn-inicio');
-
-        if(mode === 'welcome') {
-            welcome.style.display = 'block';
-            player.style.display = 'none';
-            backBtn.style.display = 'none';
-            homeBtn.style.display = 'none';
-        } else if(mode === 'nav-btns') {
-            backBtn.style.display = 'block';
-            homeBtn.style.display = 'block';
-        } else if(mode === 'player') {
-            welcome.style.display = 'none';
-            player.style.display = 'block';
-            backBtn.style.display = 'block';
-            homeBtn.style.display = 'block';
-        }
+    stopAudio(id) {
+        const audio = document.getElementById(id);
+        audio.pause();
+        audio.currentTime = 0;
     },
 
-    irParaInicio() {
-        this.renderEstilos();
-    },
-
-    voltar() {
-        if (this.view === 'musicas') this.carregarBandas(this.currentStyle);
-        else if (this.view === 'bandas') this.renderEstilos();
-        else if (document.getElementById('player').style.display === 'block') {
-            this.carregarMusicas(this.currentBanda);
-            document.getElementById('player').style.display = 'none';
-        }
-    }
+    // ... (voltar e irParaInicio mantidos)
 };
-
-app.init();
