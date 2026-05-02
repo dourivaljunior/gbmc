@@ -3,186 +3,264 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MusicManager Pro | Sistema de Acervo</title>
+    <title>Portal Garage Band - Mário Cravo</title>
     <style>
         :root {
-            --bg-dark: #0f172a;
-            --sidebar-bg: #1e293b;
-            --accent-blue: #3b82f6;
-            --text-main: #f8fafc;
-            --card-hover: #334155;
+            --neon-blue: #00f2ff;
+            --neon-pink: #ff00e6;
+            --glass: rgba(255, 255, 255, 0.05);
+            --bg: #05070a;
         }
 
-        * { box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg-dark); color: var(--text-main); margin: 0; overflow: hidden; }
+        body {
+            background-color: var(--bg);
+            color: white;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-        /* Estrutura Principal */
-        .layout { display: flex; height: 100vh; width: 100vw; }
+        /* LETREIRO LUMINOSO NEON */
+        .neon-title {
+            font-family: 'Courier New', monospace;
+            font-size: 2.5rem;
+            color: #fff;
+            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--neon-blue), 0 0 30px var(--neon-blue), 0 0 40px var(--neon-blue);
+            animation: flicker 2s infinite alternate;
+            text-align: center;
+            margin: 20px 0;
+        }
 
-        /* Sidebar Esquerda */
-        .sidebar { width: 320px; background: var(--sidebar-bg); border-right: 1px solid #334155; display: flex; flex-direction: column; padding: 20px; }
-        .sidebar h2 { color: var(--accent-blue); font-size: 1.2rem; border-bottom: 2px solid #334155; padding-bottom: 10px; margin-top: 0; }
-        .nav-list { list-style: none; padding: 0; flex-grow: 1; overflow-y: auto; }
-        .nav-item { padding: 15px; background: #0f172a; margin-bottom: 8px; border-radius: 8px; cursor: pointer; transition: 0.3s; border-left: 4px solid transparent; }
-        .nav-item:hover { background: var(--card-hover); border-left-color: var(--accent-blue); }
-        .nav-item.active { background: var(--accent-blue); color: white; }
+        @keyframes flicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
+            20%, 24%, 55% { opacity: 0.3; text-shadow: none; }
+        }
 
-        /* Área de Conteúdo Direita */
-        .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; }
-        .header-content { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .btn-voltar { background: #475569; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; display: none; }
-        .btn-voltar:hover { background: #64748b; }
+        /* LAYOUT */
+        .sidebar {
+            width: 300px;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(10px);
+            border-right: 2px solid var(--neon-blue);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
 
-        /* Grid de Músicas e Bandas */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .card { background: var(--sidebar-bg); padding: 20px; border-radius: 12px; border: 1px solid #334155; transition: 0.3s; position: relative; }
-        .card:hover { transform: translateY(-5px); border-color: var(--accent-blue); }
-        .card h3 { margin: 0 0 15px 0; font-size: 1.1rem; color: var(--accent-blue); }
+        .main-stage {
+            flex: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://lh3.googleusercontent.com/d/1wE8PTP74rEIkOPIXVqHxy2bCuuRQRaa5'); /* ID da sua pasta para imagem de fundo */
+            background-size: cover;
+            background-position: center;
+        }
 
-        /* Botões de Arquivos */
-        .file-links { display: flex; flex-direction: column; gap: 8px; }
-        .btn-file { text-decoration: none; padding: 10px; border-radius: 6px; font-size: 0.85rem; text-align: center; font-weight: bold; transition: 0.2s; }
-        .btn-pdf { background: #ef4444; color: white; }
-        .btn-mp3 { background: #10b981; color: white; }
-        .btn-bt { background: #f59e0b; color: white; }
-        .btn-file:hover { opacity: 0.8; filter: brightness(1.2); }
+        /* LISTAS E BOTÕES */
+        .nav-item {
+            padding: 15px;
+            margin: 10px 0;
+            background: var(--glass);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
 
-        /* Loader */
-        #loader { text-align: center; margin-top: 50px; color: var(--accent-blue); font-weight: bold; }
+        .nav-item:hover {
+            background: var(--neon-blue);
+            color: black;
+            box-shadow: 0 0 20px var(--neon-blue);
+        }
+
+        /* PLAYER INTERNO (MODERN JAVASCRIPT) */
+        .player-container {
+            width: 90%;
+            max-width: 800px;
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 20px;
+            border: 1px solid var(--neon-pink);
+            padding: 25px;
+            display: none; /* Inicia oculto */
+            backdrop-filter: blur(15px);
+            box-shadow: 0 0 30px var(--neon-pink);
+            margin-top: 20px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 400px;
+            border-radius: 10px;
+            border: none;
+            margin-bottom: 15px;
+        }
+
+        audio {
+            width: 100%;
+            margin: 10px 0;
+            filter: invert(100%) hue-rotate(180deg) brightness(1.5);
+        }
+
+        .controls-row {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+        }
+
+        .btn-action {
+            background: none;
+            border: 1px solid white;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-action:hover { background: white; color: black; }
+
+        .btn-voltar {
+            position: absolute;
+            top: 20px;
+            left: 320px;
+            background: var(--neon-pink);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            display: none;
+        }
+
     </style>
 </head>
 <body>
 
-<div class="layout">
     <aside class="sidebar">
-        <h2 id="menu-title">Estilos Musicais</h2>
-        <ul id="nav-list" class="nav-list">
-            <!-- Gerado via JS -->
-        </ul>
-        <button id="btn-voltar" class="btn-voltar" onclick="app.voltar()">⬅ VOLTAR</button>
+        <h2 style="color: var(--neon-blue); text-align: center;">MENU</h2>
+        <div id="nav-content">
+            <!-- Dinâmico -->
+        </div>
     </aside>
 
-    <main class="main-content">
-        <div class="header-content">
-            <h1 id="view-title">Início</h1>
-            <div id="status">Conectado ao Drive</div>
+    <main class="main-stage" id="stage">
+        <button id="btn-voltar" class="btn-voltar" onclick="app.voltar()">⬅ VOLTAR</button>
+        
+        <div id="welcome-screen">
+            <div class="neon-title">PORTAL GARAGE BAND<br>MÁRIO CRAVO</div>
+            <!-- A imagem de fundo do "stage" já é a da garagem -->
         </div>
 
-        <div id="loader">Carregando Acervo...</div>
-        <div id="main-grid" class="grid">
-            <!-- Cards de Bandas/Músicas -->
+        <div id="player" class="player-container">
+            <h2 id="musica-titulo" style="color: var(--neon-blue); margin-top: 0;">Nome da Música</h2>
+            
+            <p>📄 LETRA (PDF)</p>
+            <iframe id="pdf-viewer" src=""></iframe>
+            
+            <p>🎵 MÚSICA & BACKTRACKING</p>
+            <div class="controls-row">
+                <div style="flex: 1; margin-right: 10px;">
+                    <small>Original</small>
+                    <audio id="audio-main" controls></audio>
+                </div>
+                <div style="flex: 1;">
+                    <small>Backtracking</small>
+                    <audio id="audio-bt" controls></audio>
+                </div>
+            </div>
         </div>
     </main>
-</div>
 
 <script>
-    /**
-     * MUSICMANAGER SENIOR ENGINE
-     */
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbywSHZf36zGAywDEnCq6Y7tkt7aqUNdnP0ltHBAOH4sjtDFRHjQzoj0RhbsK4GJVJhNzw/exec";
+    const DRIVE_BASE = "https://lh3.googleusercontent.com/d/";
 
     const app = {
         dados: null,
-        nivel: 'estilos', // estilos | bandas | musicas
-        estiloAtual: null,
-        bandaAtual: null,
+        nivel: 'estilos',
 
         async init() {
-            try {
-                const res = await fetch(SCRIPT_URL);
-                this.dados = await res.json();
-                document.getElementById('loader').style.display = 'none';
-                this.renderEstilos();
-            } catch (e) {
-                document.getElementById('loader').innerText = "Erro ao carregar dados do Google Drive.";
-            }
+            const res = await fetch(SCRIPT_URL);
+            this.dados = await res.json();
+            this.renderEstilos();
         },
 
         renderEstilos() {
             this.nivel = 'estilos';
-            this.toggleBotao(false);
-            document.getElementById('view-title').innerText = "Selecione um Estilo";
-            const nav = document.getElementById('nav-list');
-            const grid = document.getElementById('main-grid');
+            document.getElementById('btn-voltar').style.display = 'none';
+            document.getElementById('welcome-screen').style.display = 'block';
+            document.getElementById('player').style.display = 'none';
             
+            const nav = document.getElementById('nav-content');
             nav.innerHTML = '';
-            grid.innerHTML = '';
-
+            
             Object.keys(this.dados).forEach(estilo => {
-                const li = document.createElement('li');
-                li.className = 'nav-item';
-                li.innerText = estilo;
-                li.onclick = () => this.carregarBandas(estilo);
-                nav.appendChild(li);
-
-                // Criar card visual também
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `<h3>${estilo}</h3><p>Ver bandas disponíveis</p>`;
-                card.onclick = () => this.carregarBandas(estilo);
-                grid.appendChild(card);
+                const div = document.createElement('div');
+                div.className = 'nav-item';
+                div.innerText = estilo;
+                div.onclick = () => this.renderBandas(estilo);
+                nav.appendChild(div);
             });
         },
 
-        carregarBandas(estilo) {
+        renderBandas(estilo) {
             this.nivel = 'bandas';
             this.estiloAtual = estilo;
-            this.toggleBotao(true);
-            document.getElementById('view-title').innerText = estilo;
+            document.getElementById('btn-voltar').style.display = 'block';
             
-            const grid = document.getElementById('main-grid');
-            grid.innerHTML = '';
-
-            const bandas = Object.keys(this.dados[estilo]);
-            if (bandas.length === 0) {
-                grid.innerHTML = "<p>Nenhuma banda cadastrada neste estilo.</p>";
-                return;
-            }
-
-            bandas.forEach(banda => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `<h3>${banda}</h3><p>Lista de Músicas e Backtracks</p>`;
-                card.onclick = () => this.carregarMusicas(banda);
-                grid.appendChild(card);
+            const nav = document.getElementById('nav-content');
+            nav.innerHTML = `<h3 style='color:var(--neon-pink)'>${estilo}</h3>`;
+            
+            Object.keys(this.dados[estilo]).forEach(banda => {
+                const div = document.createElement('div');
+                div.className = 'nav-item';
+                div.innerText = banda;
+                div.onclick = () => this.renderMusicas(banda);
+                nav.appendChild(div);
             });
         },
 
-        carregarMusicas(banda) {
+        renderMusicas(banda) {
             this.nivel = 'musicas';
-            this.bandaAtual = banda;
-            document.getElementById('view-title').innerText = banda;
+            const nav = document.getElementById('nav-content');
+            nav.innerHTML = `<h3 style='color:var(--neon-pink)'>${banda}</h3>`;
             
-            const grid = document.getElementById('main-grid');
-            grid.innerHTML = '';
-
             const musicas = this.dados[this.estiloAtual][banda];
-
             musicas.forEach(m => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                // Link direto do Google Drive para visualização/download
-                const driveBase = "https://drive.google.com/uc?id=";
-                
-                card.innerHTML = `
-                    <h3>${m.titulo}</h3>
-                    <div class="file-links">
-                        <a href="${driveBase}${m.letra}" target="_blank" class="btn-file btn-pdf">📄 LETRA (PDF)</a>
-                        <a href="${driveBase}${m.musica}" target="_blank" class="btn-file btn-mp3">🎵 MÚSICA (MP3)</a>
-                        <a href="${driveBase}${m.bt}" target="_blank" class="btn-file btn-bt">🎸 BACK TRACKING (MP3)</a>
-                    </div>
-                `;
-                grid.appendChild(card);
+                const div = document.createElement('div');
+                div.className = 'nav-item';
+                div.innerText = m.titulo;
+                div.onclick = () => this.abrirPlayer(m);
+                nav.appendChild(div);
             });
+        },
+
+        abrirPlayer(musica) {
+            document.getElementById('welcome-screen').style.display = 'none';
+            const player = document.getElementById('player');
+            player.style.display = 'block';
+            
+            document.getElementById('musica-titulo').innerText = musica.titulo;
+            
+            // PDF Integrado (Google Drive Viewer)
+            document.getElementById('pdf-viewer').src = `https://docs.google.com/viewer?srcid=${musica.letra}&pid=explorer&efp=true&a=v&chrome=false&embedded=true`;
+            
+            // Áudios
+            document.getElementById('audio-main').src = DRIVE_BASE + musica.musica;
+            document.getElementById('audio-bt').src = DRIVE_BASE + musica.bt;
         },
 
         voltar() {
-            if (this.nivel === 'musicas') this.carregarBandas(this.estiloAtual);
+            if (this.nivel === 'musicas') this.renderBandas(this.estiloAtual);
             else if (this.nivel === 'bandas') this.renderEstilos();
-        },
-
-        toggleBotao(show) {
-            document.getElementById('btn-voltar').style.display = show ? 'block' : 'none';
         }
     };
 
