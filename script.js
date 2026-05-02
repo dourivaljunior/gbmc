@@ -1,20 +1,17 @@
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyKqlf8mNNSIjAwXt5nC18BZC9nXFgCZOGH3XIq-TDtH9qW_-n2rpRF0gCUIfJOPZwJ/exec";
-const DRIVE_DIRECT = "https://lh3.googleusercontent.com/d/";
 
 const app = {
     data: null,
     view: 'estilos',
     currentStyle: null,
     currentBanda: null,
+    audioNodes: { main: new Audio(), bt: new Audio() },
+    ids: { main: null, bt: null },
 
     async init() {
-        try {
-            const response = await fetch(SCRIPT_URL);
-            this.data = await response.json();
-            this.renderEstilos();
-        } catch (error) {
-            console.error("Erro ao carregar dados da API:", error);
-        }
+        const response = await fetch(SCRIPT_URL);
+        this.data = await response.json();
+        this.renderEstilos();
     },
 
     renderEstilos() {
@@ -49,38 +46,63 @@ const app = {
     },
 
     abrirPlayer(m) {
+        this.stopAudio('main');
+        this.stopAudio('bt');
         this.toggleUI('player');
         document.getElementById('musica-titulo').innerText = m.titulo;
+        document.getElementById('link-cifra').href = `https://drive.google.com/file/d/${m.letra}/view`;
         
-        // Link Cifra: Abre a visualização do Drive em nova aba
-        document.getElementById('link-cifra').href = `https://drive.google.com/file/d/${m.letra}/view?usp=sharing`;
+        // Armazena IDs para carregamento sob demanda
+        this.ids.main = m.musica;
+        this.ids.bt = m.bt;
         
-        // Configuração dos Áudios para execução interna
-        const audioMain = document.getElementById('audio-main');
-        const audioBt = document.getElementById('audio-bt');
-
-        audioMain.src = DRIVE_DIRECT + m.musica;
-        audioBt.src = DRIVE_DIRECT + m.bt;
-
-        audioMain.load();
-        audioBt.load();
+        // Reseta labels
+        document.getElementById('btn-play-main').innerText = "▶ PLAY";
+        document.getElementById('btn-play-bt').innerText = "▶ PLAY";
+        
+        // Limpa fontes anteriores para evitar bugs
+        this.audioNodes.main.src = "";
+        this.audioNodes.bt.src = "";
     },
 
-    playAudio(id) { 
-        const audio = document.getElementById(id);
-        
-        // Pausa outros áudios para evitar sobreposição
-        document.querySelectorAll('audio').forEach(a => {
-            if(a.id !== id) { a.pause(); a.currentTime = 0; }
-        });
+    async handleAudio(type) {
+        const audio = this.audioNodes[type];
+        const btn = document.getElementById(`btn-play-${type}`);
+        const fileId = this.ids[type];
 
-        audio.play().catch(e => console.error("Erro ao tocar áudio. Verifique as permissões do link no Drive.", e));
+        if (!audio.paused) {
+            audio.pause();
+            btn.innerText = "▶ PLAY";
+            return;
+        }
+
+        // Se não houver fonte carregada, aplica o link de download direto do Google Drive
+        if (!audio.src || audio.src === window.location.href) {
+            btn.innerText = "⏳ CARREGANDO...";
+            // O link lh3 é o mais resiliente para streaming direto do Drive
+            audio.src = `https://lh3.googleusercontent.com/d/${fileId}`;
+            audio.load();
+        }
+
+        try {
+            await audio.play();
+            btn.innerText = "⏸ PAUSE";
+            
+            // Pausa o outro canal automaticamente
+            const outro = type === 'main' ? 'bt' : 'main';
+            this.stopAudio(outro);
+        } catch (e) {
+            btn.innerText = "❌ ERRO";
+            console.error("Erro ao tocar:", e);
+        }
     },
 
-    stopAudio(id) { 
-        const audio = document.getElementById(id);
-        audio.pause();
-        audio.currentTime = 0;
+    stopAudio(type) {
+        const a = this.audioNodes[type];
+        const btn = document.getElementById(`btn-play-${type}`);
+        a.pause();
+        a.currentTime = 0;
+        if(btn) btn.innerText = "▶ PLAY";
     },
 
     createNavItem(text, action) {
@@ -109,7 +131,7 @@ const app = {
         }
     },
 
-    irParaInicio() { this.renderEstilos(); },
+    irParaInicio() { location.reload(); },
 
     voltar() {
         if (this.view === 'musicas') this.carregarBandas(this.currentStyle);
