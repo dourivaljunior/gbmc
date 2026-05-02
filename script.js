@@ -1,4 +1,4 @@
-const SCRIPT_URL = "SUA_URL_DO_APPS_SCRIPT";
+const SCRIPT_URL = "//script.google.com/macros/s/AKfycbywSHZf36zGAywDEnCq6Y7tkt7aqUNdnP0ltHBAOH4sjtDFRHjQzoj0RhbsK4GJVJhNzw/exec";
 const DRIVE_RAW = "https://lh3.googleusercontent.com/d/";
 
 const app = {
