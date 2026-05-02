@@ -33,24 +33,21 @@
                 <div class="control-cell">
                     <p class="cell-label">CONTEÚDO</p>
                     <a id="link-cifra" href="#" target="_blank" class="btn-action-neon">📄 MÚSICA CIFRADA</a>
-                    <p class="sub-label">(Abre em nova guia)</p>
                 </div>
 
-                <!-- Célula 2: Original -->
+                <!-- Célula 2: Música Original -->
                 <div class="control-cell">
                     <p class="cell-label">MÚSICA ORIGINAL</p>
-                    <div class="audio-controls">
-                        <button id="btn-play-main" onclick="app.handleAudio('main')" class="btn-play">▶ PLAY</button>
-                        <button onclick="app.stopAudio('main')" class="btn-stop">■ STOP</button>
+                    <div class="stream-container">
+                        <iframe id="frame-main" src="" width="100%" height="50" allow="autoplay"></iframe>
                     </div>
                 </div>
 
                 <!-- Célula 3: Back Track -->
                 <div class="control-cell">
                     <p class="cell-label">BACK TRACKING</p>
-                    <div class="audio-controls">
-                        <button id="btn-play-bt" onclick="app.handleAudio('bt')" class="btn-play">▶ PLAY</button>
-                        <button onclick="app.stopAudio('bt')" class="btn-stop">■ STOP</button>
+                    <div class="stream-container">
+                        <iframe id="frame-bt" src="" width="100%" height="50" allow="autoplay"></iframe>
                     </div>
                 </div>
             </div>
