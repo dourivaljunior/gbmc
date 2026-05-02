@@ -1,144 +1,62 @@
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyKqlf8mNNSIjAwXt5nC18BZC9nXFgCZOGH3XIq-TDtH9qW_-n2rpRF0gCUIfJOPZwJ/exec";
-const DRIVE_PROXY = "https://docs.google.com/uc?export=download&id=";
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Garage Band - Mário Cravo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <h2 class="menu-label">ESTILO MUSICAL</h2>
+        <nav id="nav-content" class="nav-list"></nav>
+    </aside>
 
-const app = {
-    data: null,
-    view: 'estilos',
-    currentStyle: null,
-    currentBanda: null,
-    audios: { main: new Audio(), bt: new Audio() },
-    cache: { main: null, bt: null },
-
-    async init() {
-        const response = await fetch(SCRIPT_URL);
-        this.data = await response.json();
-        this.renderEstilos();
-    },
-
-    renderEstilos() {
-        this.view = 'estilos';
-        this.toggleUI('welcome');
-        const nav = document.getElementById('nav-content');
-        nav.innerHTML = '';
-        Object.keys(this.data).forEach(estilo => {
-            nav.appendChild(this.createNavItem(estilo, () => this.carregarBandas(estilo)));
-        });
-    },
-
-    carregarBandas(estilo) {
-        this.view = 'bandas';
-        this.currentStyle = estilo;
-        this.toggleUI('nav-btns');
-        const nav = document.getElementById('nav-content');
-        nav.innerHTML = `<h3 style="color:var(--neon-blue); text-align:center;">${estilo}</h3>`;
-        Object.keys(this.data[estilo]).forEach(banda => {
-            nav.appendChild(this.createNavItem(banda, () => this.carregarMusicas(banda)));
-        });
-    },
-
-    carregarMusicas(banda) {
-        this.view = 'musicas';
-        this.currentBanda = banda;
-        const nav = document.getElementById('nav-content');
-        nav.innerHTML = `<h3 style="color:var(--neon-blue); text-align:center;">${banda}</h3>`;
-        this.data[this.currentStyle][banda].forEach(m => {
-            nav.appendChild(this.createNavItem(m.titulo, () => this.abrirPlayer(m)));
-        });
-    },
-
-    abrirPlayer(m) {
-        this.stopAudio('main');
-        this.stopAudio('bt');
-        this.toggleUI('player');
-        document.getElementById('musica-titulo').innerText = m.titulo;
-        document.getElementById('link-cifra').href = `https://drive.google.com/file/d/${m.letra}/view`;
+    <main class="main-stage">
+        <div class="nav-controls">
+            <button id="btn-voltar" class="btn-neon-blue" onclick="app.voltar()">⬅ VOLTAR</button>
+            <button id="btn-inicio" class="btn-neon-blue" onclick="app.irParaInicio()">🏠 INÍCIO</button>
+        </div>
         
-        // Armazena os IDs para busca via Blob
-        this.cache.main = m.musica;
-        this.cache.bt = m.bt;
-        
-        // Reseta labels dos botões
-        document.getElementById('play-main').innerText = "▶ PLAY";
-        document.getElementById('play-bt').innerText = "▶ PLAY";
-    },
+        <div id="welcome-screen">
+            <div class="neon-title-small">PORTAL GARAGE BAND MÁRIO CRAVO</div>
+            <div class="image-box">
+                <img src="https://lh3.googleusercontent.com/d/1gn2p3EF0fnJo5YC1KqAmHc5ELclpZvzF" alt="Garage Band">
+            </div>
+        </div>
 
-    async handleAudio(type) {
-        const btn = document.getElementById(`play-${type}`);
-        const audioObj = this.audios[type];
-        const fileId = this.cache[type];
+        <div id="player" class="player-glass">
+            <h2 id="musica-titulo" class="neon-text-blue">NOME DA MÚSICA</h2>
+            
+            <div class="horizontal-control-panel">
+                <!-- Célula 1: Cifra -->
+                <div class="control-cell">
+                    <p class="cell-label">CONTEÚDO</p>
+                    <a id="link-cifra" href="#" target="_blank" class="btn-action-neon">📄 MÚSICA CIFRADA</a>
+                    <p class="sub-label">(Abre em nova guia)</p>
+                </div>
 
-        if (!audioObj.paused) {
-            audioObj.pause();
-            btn.innerText = "▶ PLAY";
-            return;
-        }
+                <!-- Célula 2: Original -->
+                <div class="control-cell">
+                    <p class="cell-label">MÚSICA ORIGINAL</p>
+                    <div class="audio-controls">
+                        <button id="btn-play-main" onclick="app.handleAudio('main')" class="btn-play">▶ PLAY</button>
+                        <button onclick="app.stopAudio('main')" class="btn-stop">■ STOP</button>
+                    </div>
+                </div>
 
-        // Se não tem fonte carregada, baixa o arquivo via BLOB (Solução para o erro de execução)
-        if (!audioObj.src) {
-            btn.innerText = "⏳ CARREGANDO...";
-            try {
-                const response = await fetch(DRIVE_PROXY + fileId);
-                const blob = await response.json().catch(() => response.blob()); 
-                // Se a API do Drive barrar o fetch direto por CORS, usamos o link lh3 como fallback imediato:
-                const streamUrl = `https://lh3.googleusercontent.com/d/${fileId}`;
-                audioObj.src = streamUrl;
-            } catch (e) {
-                audioObj.src = `https://lh3.googleusercontent.com/d/${fileId}`;
-            }
-        }
+                <!-- Célula 3: Back Track -->
+                <div class="control-cell">
+                    <p class="cell-label">BACK TRACKING</p>
+                    <div class="audio-controls">
+                        <button id="btn-play-bt" onclick="app.handleAudio('bt')" class="btn-play">▶ PLAY</button>
+                        <button onclick="app.stopAudio('bt')" class="btn-stop">■ STOP</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 
-        audioObj.play();
-        btn.innerText = "⏸ PAUSE";
-        
-        // Pausa o outro áudio
-        const otherType = type === 'main' ? 'bt' : 'main';
-        this.stopAudio(otherType);
-    },
-
-    stopAudio(type) {
-        const a = this.audios[type];
-        const btn = document.getElementById(`play-${type}`);
-        a.pause();
-        a.currentTime = 0;
-        if(btn) btn.innerText = "▶ PLAY";
-    },
-
-    createNavItem(text, action) {
-        const div = document.createElement('div');
-        div.className = 'nav-item';
-        div.innerText = text;
-        div.onclick = action;
-        return div;
-    },
-
-    toggleUI(mode) {
-        const welcome = document.getElementById('welcome-screen');
-        const player = document.getElementById('player');
-        const btns = [document.getElementById('btn-voltar'), document.getElementById('btn-inicio')];
-        
-        if(mode === 'welcome') {
-            welcome.style.display = 'block';
-            player.style.display = 'none';
-            btns.forEach(b => b.style.display = 'none');
-        } else {
-            btns.forEach(b => b.style.display = 'block');
-            if(mode === 'player') {
-                welcome.style.display = 'none';
-                player.style.display = 'block';
-            }
-        }
-    },
-
-    irParaInicio() { location.reload(); },
-
-    voltar() {
-        if (this.view === 'musicas') this.carregarBandas(this.currentStyle);
-        else if (this.view === 'bandas') this.renderEstilos();
-        else if (document.getElementById('player').style.display === 'block') {
-            this.carregarMusicas(this.currentBanda);
-            document.getElementById('player').style.display = 'none';
-        }
-    }
-};
-
-app.init();
+    <script src="script.js"></script>
+</body>
+</html>
