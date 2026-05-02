@@ -1,86 +1,96 @@
 :root {
     --neon-blue: #00f2ff;
     --neon-pink: #ff00e6;
-    --bg-overlay: rgba(5, 7, 10, 0.8);
+    --bg-dark: #020617;
+    --glass: rgba(255, 255, 255, 0.03);
 }
 
 body {
-    background-color: #000;
-    color: #fff;
-    font-family: 'Segoe UI', sans-serif;
+    background: var(--bg-dark);
+    color: white;
     margin: 0;
     display: flex;
+    font-family: 'Inter', sans-serif;
     height: 100vh;
 }
 
-/* BACKGROUND COM A IMAGEM DA GARAGEM */
-.main-stage {
-    flex: 1;
-    position: relative;
-    background: linear-gradient(var(--bg-overlay), var(--bg-overlay)), 
-                url('ChatGPT Image 2 de mai. de 2026, 09_26_10.jpg');
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px;
-}
-
-/* LETREIRO LUMINOSO */
-.neon-title {
-    font-size: 3.5rem;
-    text-align: center;
-    color: #fff;
-    text-shadow: 0 0 10px #fff, 0 0 20px var(--neon-blue), 0 0 40px var(--neon-blue);
-    animation: flicker 3s infinite;
-}
-
-@keyframes flicker {
-    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-    20%, 22%, 24%, 55% { opacity: 0.5; }
-}
-
-/* NAVEGAÇÃO LATERAL */
+/* SIDEBAR */
 .sidebar {
-    width: 320px;
-    background: rgba(15, 23, 42, 0.95);
+    width: 300px;
+    background: #0f172a;
     border-right: 2px solid var(--neon-blue);
-    padding: 30px;
+    padding: 20px;
+    box-shadow: 10px 0 30px rgba(0, 242, 255, 0.1);
 }
 
 .nav-item {
-    padding: 18px;
-    margin-bottom: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    margin: 10px 0;
+    background: var(--glass);
+    border: 1px solid rgba(255,255,255,0.1);
     border-radius: 8px;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    text-align: center;
+    transition: 0.3s;
     font-weight: bold;
+    text-align: center;
 }
 
 .nav-item:hover {
     background: var(--neon-blue);
-    color: #000;
-    box-shadow: 0 0 25px var(--neon-blue);
-    transform: translateX(10px);
+    color: black;
+    box-shadow: 0 0 15px var(--neon-blue);
 }
 
-/* PLAYER GLASSMORPHISM */
-.player-glass {
+/* MAIN STAGE */
+.main-stage {
+    flex: 1;
+    position: relative;
+    padding: 40px;
+    overflow-y: auto;
+    background-image: url('ChatGPT Image 2 de mai. de 2026, 09_26_10.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.neon-title {
+    font-size: 3rem;
+    text-align: center;
+    text-shadow: 0 0 20px var(--neon-blue);
+    margin-bottom: 20px;
+}
+
+.main-img {
     width: 100%;
-    max-width: 900px;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--neon-pink);
+    max-width: 700px;
+    border-radius: 15px;
+    border: 3px solid var(--neon-blue);
+    box-shadow: 0 0 40px rgba(0, 242, 255, 0.3);
+    display: block;
+    margin: 0 auto;
+}
+
+/* PLAYER */
+.player-container {
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(10px);
     border-radius: 20px;
     padding: 30px;
-    display: none;
-    box-shadow: 0 0 50px rgba(255, 0, 230, 0.2);
+    border: 1px solid var(--neon-pink);
 }
 
-iframe { width: 100%; height: 350px; border-radius: 12px; border: none; }
-audio { width: 100%; filter: invert(1); }
+iframe { width: 100%; height: 450px; border-radius: 10px; border: none; }
+audio { width: 100%; filter: invert(1); margin-top: 10px; }
+
+.hidden { display: none !important; }
+.view-header { font-size: 2rem; color: var(--neon-blue); text-transform: uppercase; border-bottom: 2px solid var(--neon-pink); padding-bottom: 10px; }
+
+.btn-nav {
+    background: #1e293b;
+    color: white;
+    border: 1px solid var(--neon-blue);
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+}
