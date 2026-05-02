@@ -26,7 +26,6 @@ body {
     text-align: center;
     border-bottom: 1px solid var(--neon-blue);
     padding-bottom: 10px;
-    letter-spacing: 1px;
 }
 
 .nav-item {
@@ -86,6 +85,9 @@ body {
     padding: 0 15px;
     border-right: 1px solid rgba(0, 242, 255, 0.2);
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .control-cell:last-child { border-right: none; }
@@ -94,22 +96,24 @@ body {
 
 .btn-action-neon {
     display: inline-block;
-    padding: 12px 15px;
+    padding: 10px;
     border: 1px solid var(--neon-blue);
     color: white;
     text-decoration: none;
     font-weight: bold;
 }
 
-.btn-action-neon:hover { background: var(--neon-blue); color: #000; }
+.stream-container {
+    background: #000;
+    border: 1px solid var(--neon-blue);
+    border-radius: 5px;
+    overflow: hidden;
+    height: 55px;
+}
 
-.audio-controls { display: flex; gap: 8px; justify-content: center; }
-
-.btn-play { background: #064e3b; color: #34d399; border: 1px solid #34d399; cursor: pointer; padding: 10px; font-weight: bold; min-width: 90px; }
-.btn-stop { background: #7f1d1d; color: #f87171; border: 1px solid #f87171; cursor: pointer; padding: 10px; font-weight: bold; }
+iframe { border: none; overflow: hidden; }
 
 .nav-controls { position: absolute; top: 20px; right: 20px; display: flex; }
 .btn-neon-blue { background: none; border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 5px 15px; cursor: pointer; margin-left: 10px; font-weight: bold; }
 
 .player-glass { display: none; width: 95%; max-width: 900px; }
-.sub-label { font-size: 0.6rem; color: #888; margin-top: 4px; }
