@@ -1,73 +1,113 @@
-/* Painel Horizontal de 3 Células */
-.horizontal-control-panel {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 20px;
-    background: rgba(0, 0, 0, 0.6);
-    border: 2px solid var(--neon-blue);
-    border-radius: 15px;
-    padding: 30px;
-    margin-top: 20px;
+:root {
+    --neon-blue: #00f2ff;
+    --bg-dark: #020617;
 }
 
-.control-cell {
+body {
+    background: var(--bg-dark);
+    color: white;
+    margin: 0;
+    display: flex;
+    height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden;
+}
+
+/* SIDEBAR E ITENS */
+.sidebar {
+    width: 280px;
+    background: #050505;
+    border-right: 2px solid var(--neon-blue);
+    padding: 20px;
+}
+
+.menu-label {
+    color: var(--neon-blue);
+    font-size: 1.2rem;
+    text-align: center;
+    border-bottom: 1px solid var(--neon-blue);
+    padding-bottom: 10px;
+}
+
+.nav-item {
+    padding: 15px;
+    margin: 10px 0;
+    border: 1px solid var(--neon-blue);
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+.nav-item:hover {
+    background: var(--neon-blue);
+    color: #000;
+    box-shadow: 0 0 15px var(--neon-blue);
+}
+
+/* MAIN STAGE */
+.main-stage {
+    flex: 1;
+    padding: 40px;
+    background: radial-gradient(circle, #111 0%, #000 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    border-right: 1px solid rgba(0, 242, 255, 0.3);
 }
 
-.control-cell:last-child {
-    border-right: none;
+.neon-title-small {
+    font-size: 1.8rem;
+    text-shadow: 0 0 10px var(--neon-blue);
+    margin-bottom: 20px;
 }
 
-.cell-label {
-    color: var(--neon-blue);
-    font-size: 0.9rem;
-    margin-bottom: 15px;
-    letter-spacing: 1px;
-}
-
-/* Botões de Ação Profissionais */
-.btn-action-neon {
-    text-decoration: none;
-    color: #fff;
+.image-box {
     border: 2px solid var(--neon-blue);
-    padding: 12px 20px;
-    font-weight: bold;
-    transition: 0.3s;
-    background: rgba(0, 242, 255, 0.1);
+    padding: 5px;
+    max-width: 450px;
 }
 
-.btn-action-neon:hover {
-    background: var(--neon-blue);
-    color: #000;
-    box-shadow: 0 0 20px var(--neon-blue);
+.image-box img { width: 100%; display: block; }
+
+/* PAINEL HORIZONTAL */
+.horizontal-control-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--neon-blue);
+    padding: 25px;
+    border-radius: 10px;
 }
 
-.audio-controls {
-    display: flex;
-    gap: 10px;
+.control-cell {
+    padding: 0 20px;
+    border-right: 1px solid rgba(0, 242, 255, 0.2);
+    text-align: center;
 }
 
-.btn-play {
-    background: #064e3b;
-    color: #34d399;
-    border: 1px solid #34d399;
+.control-cell:last-child { border-right: none; }
+
+.cell-label { color: var(--neon-blue); margin-bottom: 15px; font-size: 0.8rem; }
+
+/* BOTÕES */
+.btn-action-neon {
+    display: inline-block;
     padding: 10px 15px;
-    cursor: pointer;
+    border: 1px solid var(--neon-blue);
+    color: white;
+    text-decoration: none;
     font-weight: bold;
 }
 
-.btn-stop {
-    background: #7f1d1d;
-    color: #f87171;
-    border: 1px solid #f87171;
-    padding: 10px 15px;
-    cursor: pointer;
-    font-weight: bold;
-}
+.audio-controls { display: flex; gap: 8px; justify-content: center; }
 
-.btn-play:hover { background: #34d399; color: #000; }
-.btn-stop:hover { background: #f87171; color: #000; }
+.btn-play { background: #064e3b; color: #34d399; border: 1px solid #34d399; cursor: pointer; padding: 8px; }
+.btn-stop { background: #7f1d1d; color: #f87171; border: 1px solid #f87171; cursor: pointer; padding: 8px; }
+
+.nav-controls { position: absolute; top: 20px; right: 20px; }
+.btn-neon-blue { background: none; border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 5px 15px; cursor: pointer; margin-left: 10px; }
+
+.player-glass { display: none; width: 90%; }
+.sub-label { font-size: 0.7rem; margin-top: 5px; color: #aaa; }
