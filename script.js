@@ -1,68 +1,93 @@
-let nivelAtual = 'estilos'; // estilos, bandas, musicas
-let estiloSelecionado = '';
-let bandaSelecionada = '';
+/**
+ * PORTAL GARAGE BAND CORE ENGINE
+ */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbywSHZf36zGAywDEnCq6Y7tkt7aqUNdnP0ltHBAOH4sjtDFRHjQzoj0RhbsK4GJVJhNzw/exec";
+const DRIVE_RAW = "https://lh3.googleusercontent.com/d/";
 
-function renderizarEstilos() {
-    nivelAtual = 'estilos';
-    document.getElementById('menu-title').innerText = "Estilos Musicais";
-    document.getElementById('content-title').innerText = "Escolha o Gênero";
-    document.getElementById('btn-voltar').classList.add('hidden');
-    
-    const lista = document.getElementById('lista-navegacao');
-    lista.innerHTML = '';
-    
-    Object.keys(ACERVO_MUSICAL).forEach(estilo => {
-        const li = document.createElement('li');
-        li.innerText = estilo;
-        li.onclick = () => carregarBandas(estilo);
-        lista.appendChild(li);
-    });
-}
+const app = {
+    data: null,
+    view: 'estilos',
+    currentStyle: null,
 
-function carregarBandas(estilo) {
-    nivelAtual = 'bandas';
-    estiloSelecionado = estilo;
-    document.getElementById('menu-title').innerText = "Bandas: " + estilo;
-    document.getElementById('btn-voltar').classList.remove('hidden');
-    
-    const grid = document.getElementById('grid-cards');
-    grid.innerHTML = '';
-    
-    const bandas = Object.keys(ACERVO_MUSICAL[estilo]);
-    bandas.forEach(banda => {
+    async init() {
+        const response = await fetch(SCRIPT_URL);
+        this.data = await response.json();
+        this.renderEstilos();
+    },
+
+    renderEstilos() {
+        this.view = 'estilos';
+        this.toggleUI('welcome');
+        const nav = document.getElementById('nav-content');
+        nav.innerHTML = '';
+        
+        Object.keys(this.data).forEach(estilo => {
+            const el = this.createNavItem(estilo, () => this.carregarBandas(estilo));
+            nav.appendChild(el);
+        });
+    },
+
+    carregarBandas(estilo) {
+        this.view = 'bandas';
+        this.currentStyle = estilo;
+        this.toggleUI('back-btn');
+        const nav = document.getElementById('nav-content');
+        nav.innerHTML = `<h3 style="color:var(--neon-pink)">${estilo}</h3>`;
+        
+        Object.keys(this.data[estilo]).forEach(banda => {
+            const el = this.createNavItem(banda, () => this.carregarMusicas(banda));
+            nav.appendChild(el);
+        });
+    },
+
+    carregarMusicas(banda) {
+        this.view = 'musicas';
+        const nav = document.getElementById('nav-content');
+        nav.innerHTML = `<h3 style="color:var(--neon-pink)">${banda}</h3>`;
+        
+        this.data[this.currentStyle][banda].forEach(m => {
+            const el = this.createNavItem(m.titulo, () => this.abrirPlayer(m));
+            nav.appendChild(el);
+        });
+    },
+
+    abrirPlayer(m) {
+        this.toggleUI('player');
+        document.getElementById('musica-titulo').innerText = m.titulo;
+        document.getElementById('pdf-viewer').src = `https://docs.google.com/viewer?srcid=${m.letra}&pid=explorer&efp=true&a=v&chrome=false&embedded=true`;
+        document.getElementById('audio-main').src = DRIVE_RAW + m.musica;
+        document.getElementById('audio-bt').src = DRIVE_RAW + m.bt;
+    },
+
+    createNavItem(text, action) {
         const div = document.createElement('div');
-        div.className = 'card-musica';
-        div.innerHTML = `<h3>${banda}</h3><button onclick="carregarMusicas('${banda}')">Ver Músicas</button>`;
-        grid.appendChild(div);
-    });
-}
+        div.className = 'nav-item';
+        div.innerText = text;
+        div.onclick = action;
+        return div;
+    },
 
-function carregarMusicas(banda) {
-    nivelAtual = 'musicas';
-    bandaSelecionada = banda;
-    document.getElementById('content-title').innerText = banda;
-    
-    const grid = document.getElementById('grid-cards');
-    grid.innerHTML = '';
-    
-    const musicas = ACERVO_MUSICAL[estiloSelecionado][banda];
-    musicas.forEach(m => {
-        const div = document.createElement('div');
-        div.className = 'card-musica';
-        div.innerHTML = `
-            <h4>${m.titulo}</h4>
-            <a class="btn-file" href="https://drive.google.com/uc?id=${m.letra_id}" target="_blank">📄 Letra (PDF)</a>
-            <a class="btn-file" href="https://drive.google.com/uc?id=${m.musica_id}" target="_blank">🎵 Música (MP3)</a>
-            <a class="btn-file" href="https://drive.google.com/uc?id=${m.bt_id}" target="_blank">🎸 Back Track</a>
-        `;
-        grid.appendChild(div);
-    });
-}
+    toggleUI(mode) {
+        const welcome = document.getElementById('welcome-screen');
+        const player = document.getElementById('player');
+        const backBtn = document.getElementById('btn-voltar');
 
-function voltar() {
-    if (nivelAtual === 'musicas') carregarBandas(estiloSelecionado);
-    else if (nivelAtual === 'bandas') renderizarEstilos();
-}
+        if(mode === 'welcome') {
+            welcome.style.display = 'block';
+            player.style.display = 'none';
+            backBtn.style.display = 'none';
+        } else if(mode === 'player') {
+            welcome.style.display = 'none';
+            player.style.display = 'block';
+        } else if(mode === 'back-btn') {
+            backBtn.style.display = 'block';
+        }
+    },
 
-// Inicializa
-renderizarEstilos();
+    voltar() {
+        if (this.view === 'musicas') this.carregarBandas(this.currentStyle);
+        else if (this.view === 'bandas') this.renderEstilos();
+    }
+};
+
+app.init();
