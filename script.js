@@ -5,7 +5,6 @@ const app = {
     view: 'estilos',
     currentStyle: null,
     currentBanda: null,
-    audioObj: { main: new Audio(), bt: new Audio() },
     ids: { main: null, bt: null },
 
     async init() {
@@ -46,8 +45,8 @@ const app = {
     },
 
     abrirPlayer(m) {
-        this.pararAudio('main');
-        this.pararAudio('bt');
+        this.parar('main');
+        this.parar('bt');
         this.toggleUI('player');
         document.getElementById('musica-titulo').innerText = m.titulo;
         document.getElementById('link-cifra').href = `https://drive.google.com/file/d/${m.letra}/view?usp=sharing`;
@@ -55,49 +54,50 @@ const app = {
         this.ids.main = m.musica;
         this.ids.bt = m.bt;
         
-        // Limpa fontes para carregar novos arquivos
-        this.audioObj.main.src = "";
-        this.audioObj.bt.src = "";
-        document.getElementById('play-main').innerText = "▶ PLAY";
-        document.getElementById('play-bt').innerText = "▶ PLAY";
+        // Reseta as fontes para forçar novo carregamento ao dar Play
+        document.getElementById('audio-main-el').src = "";
+        document.getElementById('audio-bt-el').src = "";
     },
 
-    async tocarAudio(tipo) {
-        const audio = this.audioObj[tipo];
+    tocar(tipo) {
+        const audio = document.getElementById(`audio-${tipo}-el`);
         const btn = document.getElementById(`play-${tipo}`);
         const id = this.ids[tipo];
 
-        if (!audio.paused) {
+        if (!audio.paused && audio.src !== "") {
             audio.pause();
             btn.innerText = "▶ PLAY";
             return;
         }
 
-        if (!audio.src || audio.src === "") {
+        // Se a fonte estiver vazia, define o link de download direto do Google Drive
+        if (audio.src === "" || audio.src === window.location.href) {
             btn.innerText = "⏳ CARREGANDO...";
-            // Link de download forçado que funciona com a tag Audio
-            audio.src = `https://docs.google.com/uc?export=download&id=${id}`;
+            // O parâmetro &confirm=no ajuda a pular telas de aviso de vírus em arquivos pequenos
+            audio.src = `https://docs.google.com/uc?export=download&id=${id}&confirm=no`;
+            audio.load();
         }
 
-        try {
-            await audio.play();
+        audio.play().then(() => {
             btn.innerText = "⏸ PAUSE";
-            // Para o outro áudio para não sobrepor
+            // Para o outro áudio
             const outro = tipo === 'main' ? 'bt' : 'main';
-            this.pararAudio(outro);
-        } catch (e) {
-            console.error("Erro ao tocar áudio:", e);
-            // Fallback imediato para link de mídia direta se o uc falhar
+            this.parar(outro);
+        }).catch(err => {
+            console.error("Erro ao tocar áudio:", err);
+            // Tenta o fallback imediato para o link de imagem de mídia
             audio.src = `https://lh3.googleusercontent.com/d/${id}`;
-            audio.play();
-        }
+            audio.play().then(() => btn.innerText = "⏸ PAUSE");
+        });
     },
 
-    pararAudio(tipo) {
-        const a = this.audioObj[tipo];
-        a.pause();
-        a.currentTime = 0;
+    parar(tipo) {
+        const audio = document.getElementById(`audio-${tipo}-el`);
         const btn = document.getElementById(`play-${tipo}`);
+        if(audio) {
+            audio.pause();
+            audio.currentTime = 0;
+        }
         if(btn) btn.innerText = "▶ PLAY";
     },
 
