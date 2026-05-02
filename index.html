@@ -2,30 +2,29 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Garage Band - Mário Cravo</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <aside class="sidebar">
         <h2 class="menu-label">ESTILO MUSICAL</h2>
-        <nav id="nav-content" class="nav-list"></nav>
+        <nav id="nav-content"></nav>
     </aside>
 
     <main class="main-stage">
         <div class="nav-controls">
-            <button id="btn-voltar" class="btn-neon-blue" onclick="app.voltar()">⬅ VOLTAR</button>
-            <button id="btn-inicio" class="btn-neon-blue" onclick="app.irParaInicio()">🏠 INÍCIO</button>
+            <button class="btn-neon-blue" onclick="app.voltar()">⬅ VOLTAR</button>
+            <button class="btn-neon-blue" onclick="app.irParaInicio()">🏠 INÍCIO</button>
         </div>
         
         <div id="welcome-screen">
             <div class="neon-title-small">PORTAL GARAGE BAND MÁRIO CRAVO</div>
             <div class="image-box">
-                <img src="https://lh3.googleusercontent.com/d/1gn2p3EF0fnJo5YC1KqAmHc5ELclpZvzF" alt="Garage Band">
+                <img src="https://lh3.googleusercontent.com/d/1gn2p3EF0fnJo5YC1KqAmHc5ELcl1" alt="Garage Band">
             </div>
         </div>
 
-        <div id="player" class="player-glass">
+        <div id="player" class="player-glass" style="display: none;">
             <h2 id="musica-titulo" class="neon-text-blue">NOME DA MÚSICA</h2>
             
             <div class="horizontal-control-panel">
@@ -53,8 +52,9 @@
         </div>
     </main>
 
-    <audio id="audio-main-el"></audio>
-    <audio id="audio-bt-el"></audio>
+    <!-- Tags de áudio essenciais -->
+    <audio id="audio-main-el" preload="auto"></audio>
+    <audio id="audio-bt-el" preload="auto"></audio>
 
     <script src="script.js"></script>
 </body>
