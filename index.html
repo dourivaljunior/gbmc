@@ -29,25 +29,24 @@
             <h2 id="musica-titulo" class="neon-text-blue">NOME DA MÚSICA</h2>
             
             <div class="horizontal-control-panel">
-                <!-- Célula 1: Cifra -->
                 <div class="control-cell">
                     <p class="cell-label">CONTEÚDO</p>
                     <a id="link-cifra" href="#" target="_blank" class="btn-action-neon">📄 MÚSICA CIFRADA</a>
                 </div>
 
-                <!-- Célula 2: Música Original -->
                 <div class="control-cell">
                     <p class="cell-label">MÚSICA ORIGINAL</p>
-                    <div class="stream-container">
-                        <iframe id="frame-main" src="" width="100%" height="50" allow="autoplay"></iframe>
+                    <div class="audio-controls">
+                        <button id="play-main" onclick="app.tocarAudio('main')" class="btn-play">▶ PLAY</button>
+                        <button onclick="app.pararAudio('main')" class="btn-stop">■ STOP</button>
                     </div>
                 </div>
 
-                <!-- Célula 3: Back Track -->
                 <div class="control-cell">
                     <p class="cell-label">BACK TRACKING</p>
-                    <div class="stream-container">
-                        <iframe id="frame-bt" src="" width="100%" height="50" allow="autoplay"></iframe>
+                    <div class="audio-controls">
+                        <button id="play-bt" onclick="app.tocarAudio('bt')" class="btn-play">▶ PLAY</button>
+                        <button onclick="app.pararAudio('bt')" class="btn-stop">■ STOP</button>
                     </div>
                 </div>
             </div>
