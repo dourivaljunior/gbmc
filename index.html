@@ -7,42 +7,58 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+    <!-- BARRA LATERAL (FIXA) -->
     <aside class="sidebar">
-        <h2 class="menu-label">MENU</h2>
-        <nav id="nav-content" class="nav-list"></nav>
+        <h2 class="neon-text-blue">ESTILO MUSICAL</h2>
+        <nav id="menu-estilos" class="nav-container">
+            <!-- Injetado via script.js -->
+        </nav>
     </aside>
 
-    <main class="main-stage">
-        <button id="btn-voltar" class="btn-neon-pink" onclick="app.voltar()">⬅ VOLTAR</button>
+    <!-- PALCO PRINCIPAL -->
+    <main class="main-stage" id="main-stage">
         
-        <div id="welcome-screen">
-            <div class="neon-title">PORTAL GARAGE BAND<br>MÁRIO CRAVO</div>
-            <!-- A imagem ChatGPT Image 2 de mai. de 2026, 09_26_10.jpg é o background do Main Stage no CSS -->
+        <!-- BOTÕES DE NAVEGAÇÃO -->
+        <div class="nav-controls">
+            <button id="btn-inicio" class="btn-nav" onclick="app.irParaInicio()">🏠 INÍCIO</button>
+            <button id="btn-voltar" class="btn-nav" onclick="app.voltar()">⬅ VOLTAR</button>
         </div>
 
-        <div id="player" class="player-glass">
-            <h2 id="musica-titulo" class="neon-text-blue">Nome da Música</h2>
-            <div class="player-body">
-                <section class="pdf-section">
-                    <p class="label">📄 LETRA (PDF)</p>
-                    <iframe id="pdf-viewer" src=""></iframe>
-                </section>
-                
-                <section class="audio-section">
-                    <p class="label">🎵 MIXAGEM & PLAYBACK</p>
-                    <div class="audio-grid">
-                        <div class="audio-card">
-                            <span>Original</span>
-                            <audio id="audio-main" controls></audio>
-                        </div>
-                        <div class="audio-card">
-                            <span>Backtracking</span>
-                            <audio id="audio-bt" controls></audio>
-                        </div>
-                    </div>
-                </section>
+        <!-- TELA 1: BOAS-VINDAS (INDEX) -->
+        <section id="view-inicio" class="view">
+            <div class="neon-title">PORTAL GARAGE BAND<br>MÁRIO CRAVO</div>
+            <div class="welcome-banner">
+                <img src="https://lh3.googleusercontent.com/d/1gn2p3EF0fnJo5YC1KqAmHc5ELclpZvzF" alt="Garage Band" class="main-img">
             </div>
-        </div>
+        </section>
+
+        <!-- TELA 2: LISTA DE BANDAS -->
+        <section id="view-bandas" class="view hidden">
+            <h2 id="titulo-estilo" class="view-header"></h2>
+            <div id="grid-bandas" class="grid-layout"></div>
+        </section>
+
+        <!-- TELA 3: PLAYER DE MÚSICAS -->
+        <section id="view-player" class="view hidden">
+            <h2 id="titulo-musica" class="view-header neon-text-pink"></h2>
+            <div class="player-container">
+                <div class="pdf-box">
+                    <iframe id="pdf-frame" src=""></iframe>
+                </div>
+                <div class="audio-box">
+                    <div class="audio-track">
+                        <span>ORIGINAL</span>
+                        <audio id="audio-orig" controls></audio>
+                    </div>
+                    <div class="audio-track">
+                        <span>BACKTRACKING</span>
+                        <audio id="audio-bt" controls></audio>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <script src="script.js"></script>
