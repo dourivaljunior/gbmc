@@ -3,24 +3,19 @@ const app = {
     view: 'estilos',
     currentStyle: null,
     currentBanda: null,
-    currentFiles: { main: "", bt: "" },
+    files: { main: "", bt: "" },
 
     async init() {
-        // Carrega o arquivo JSON que está na mesma pasta do GitHub
-        try {
-            const response = await fetch('./musicas.json');
-            this.data = await response.json();
-            this.renderEstilos();
-        } catch (error) {
-            console.error("Erro ao carregar o arquivo musicas.json:", error);
-        }
+        const resp = await fetch('./musicas.json');
+        this.data = await resp.json();
+        this.renderEstilos();
     },
 
     renderEstilos() {
         this.view = 'estilos';
         this.toggleUI('welcome');
         const nav = document.getElementById('nav-content');
-        nav.innerHTML = '';
+        nav.innerHTML = '<h2 class="menu-label">ESTILOS</h2>';
         Object.keys(this.data).forEach(estilo => {
             nav.appendChild(this.createNavItem(estilo, () => this.carregarBandas(estilo)));
         });
@@ -29,9 +24,8 @@ const app = {
     carregarBandas(estilo) {
         this.view = 'bandas';
         this.currentStyle = estilo;
-        this.toggleUI('nav-btns');
         const nav = document.getElementById('nav-content');
-        nav.innerHTML = `<h3 style="color:var(--neon-blue); text-align:center;">${estilo}</h3>`;
+        nav.innerHTML = `<h2 class="menu-label">${estilo}</h2>`;
         Object.keys(this.data[estilo]).forEach(banda => {
             nav.appendChild(this.createNavItem(banda, () => this.carregarMusicas(banda)));
         });
@@ -41,7 +35,7 @@ const app = {
         this.view = 'musicas';
         this.currentBanda = banda;
         const nav = document.getElementById('nav-content');
-        nav.innerHTML = `<h3 style="color:var(--neon-blue); text-align:center;">${banda}</h3>`;
+        nav.innerHTML = `<h2 class="menu-label">${banda}</h2>`;
         this.data[this.currentStyle][banda].forEach(m => {
             nav.appendChild(this.createNavItem(m.titulo, () => this.abrirPlayer(m)));
         });
@@ -50,56 +44,49 @@ const app = {
     abrirPlayer(m) {
         this.parar('main');
         this.parar('bt');
-        this.toggleUI('player');
-        
+        document.getElementById('player').style.display = 'block';
+        document.getElementById('welcome-screen').style.display = 'none';
         document.getElementById('musica-titulo').innerText = m.titulo;
         document.getElementById('link-cifra').href = m.letra;
         
-        // Armazena os nomes dos arquivos para carregar no Play
-        this.currentFiles.main = m.musica;
-        this.currentFiles.bt = m.bt;
+        this.files.main = m.musica;
+        this.files.bt = m.bt;
 
-        // Limpa os elementos de áudio
-        document.getElementById('audio-main-el').src = "";
-        document.getElementById('audio-bt-el').src = "";
+        // Limpa fontes anteriores para evitar lixo na memória
+        document.getElementById('audio-main-el').removeAttribute('src');
+        document.getElementById('audio-bt-el').removeAttribute('src');
     },
 
-    tocar(tipo) {
+    async tocar(tipo) {
         const audio = document.getElementById(`audio-${tipo}-el`);
         const btn = document.getElementById(`play-${tipo}`);
-        const fileName = this.currentFiles[tipo];
+        const src = this.files[tipo];
 
-        if (!audio.paused && audio.src !== "") {
+        if (!audio.paused && audio.src.includes(src)) {
             audio.pause();
             btn.innerText = "▶ PLAY";
             return;
         }
 
-        // Se a fonte estiver vazia, carrega o arquivo do GitHub (caminho relativo)
-        if (audio.src === "" || !audio.src.includes(fileName)) {
-            btn.innerText = "⏳...";
-            audio.src = fileName;
+        // Força a carga do arquivo se o src estiver vazio ou for diferente
+        if (!audio.src || !audio.src.includes(src)) {
+            audio.src = src;
             audio.load();
         }
 
-        audio.play().then(() => {
+        try {
+            await audio.play();
             btn.innerText = "⏸ PAUSE";
-            // Para o outro áudio
-            const outro = tipo === 'main' ? 'bt' : 'main';
-            this.parar(outro);
-        }).catch(err => {
-            console.error("Erro na reprodução:", err);
-            btn.innerText = "▶ PLAY";
-        });
+            this.parar(tipo === 'main' ? 'bt' : 'main');
+        } catch (e) {
+            alert("Erro ao tocar: Verifique se o arquivo " + src + " está na pasta.");
+        }
     },
 
     parar(tipo) {
         const audio = document.getElementById(`audio-${tipo}-el`);
         const btn = document.getElementById(`play-${tipo}`);
-        if(audio) {
-            audio.pause();
-            audio.currentTime = 0;
-        }
+        if(audio) { audio.pause(); audio.currentTime = 0; }
         if(btn) btn.innerText = "▶ PLAY";
     },
 
@@ -112,25 +99,11 @@ const app = {
     },
 
     toggleUI(mode) {
-        const welcome = document.getElementById('welcome-screen');
-        const player = document.getElementById('player');
-        const btns = [document.getElementById('btn-voltar'), document.getElementById('btn-inicio')];
-        
-        if(mode === 'welcome') {
-            welcome.style.display = 'block';
-            player.style.display = 'none';
-            btns.forEach(b => b.style.display = 'none');
-        } else {
-            btns.forEach(b => b.style.display = 'block');
-            if(mode === 'player') {
-                welcome.style.display = 'none';
-                player.style.display = 'block';
-            }
-        }
+        document.getElementById('welcome-screen').style.display = mode === 'welcome' ? 'block' : 'none';
+        document.getElementById('player').style.display = mode === 'player' ? 'block' : 'none';
     },
 
     irParaInicio() { this.renderEstilos(); },
-
     voltar() {
         if (this.view === 'musicas') this.carregarBandas(this.currentStyle);
         else if (this.view === 'bandas') this.renderEstilos();
