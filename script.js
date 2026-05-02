@@ -47,12 +47,20 @@ const app = {
     abrirPlayer(m) {
         this.toggleUI('player');
         document.getElementById('musica-titulo').innerText = m.titulo;
-        document.getElementById('link-cifra').href = `https://docs.google.com/viewer?srcid=${m.letra}&embedded=true`;
-        document.getElementById('audio-main').src = DRIVE_RAW + m.musica;
-        document.getElementById('audio-bt').src = DRIVE_RAW + m.bt;
+        
+        // Link Cifra (Abre em nova aba)
+        document.getElementById('link-cifra').href = "https://drive.google.com/file/d/1lK1CSqkQBj5FcUFMac24HqfCtw4OkFKY/view?usp=drive_link";
+        
+        // Áudios (Carrega ID para execução direta via DRIVE_RAW)
+        document.getElementById('audio-main').src = "https://drive.google.com/uc?export=download&id=1P0s4L_Dikx6M5-YeQokr91jJV1yGzdlt";
+        document.getElementById('audio-bt').src = "https://drive.google.com/uc?export=download&id=1ElNBgH5smow5lo7oYxfxUPYQOTzpQA5O";
     },
 
-    playAudio(id) { document.getElementById(id).play(); },
+    playAudio(id) { 
+        const a = document.getElementById(id);
+        a.play(); 
+    },
+    
     stopAudio(id) { 
         const a = document.getElementById(id);
         a.pause();
@@ -90,6 +98,10 @@ const app = {
     voltar() {
         if (this.view === 'musicas') this.carregarBandas(this.currentStyle);
         else if (this.view === 'bandas') this.renderEstilos();
+        else if (document.getElementById('player').style.display === 'block') {
+            this.carregarMusicas(this.currentBanda);
+            document.getElementById('player').style.display = 'none';
+        }
     }
 };
 
