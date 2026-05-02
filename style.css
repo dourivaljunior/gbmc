@@ -1,103 +1,86 @@
 :root {
-    --neon: #00f2ff;
-    --fogo-base: #ff4500;
-    --fogo-brilho: #ffec00;
+    --neon-blue: #00f2ff;
+    --neon-pink: #ff00e6;
+    --bg-overlay: rgba(5, 7, 10, 0.8);
 }
 
 body {
-    background: #000;
+    background-color: #000;
     color: #fff;
+    font-family: 'Segoe UI', sans-serif;
     margin: 0;
     display: flex;
     height: 100vh;
-    font-family: 'Segoe UI', sans-serif;
-    overflow: hidden;
 }
 
-/* QUADRO DA ESQUERDA - ESTILOS */
-.sidebar-professional {
-    width: 320px;
-    background: linear-gradient(180deg, #050505 0%, #111 100%);
-    border-right: 3px solid var(--neon);
-    box-shadow: 10px 0 30px rgba(0, 242, 255, 0.2);
-    display: flex;
-    flex-direction: column;
-}
-
-.box-header {
-    padding: 30px;
-    text-align: center;
-    border-bottom: 2px solid var(--neon);
-    text-shadow: 0 0 10px var(--neon);
-}
-
-.item-estilo {
-    padding: 20px;
-    margin: 15px;
-    border: 2px solid var(--neon);
-    background: rgba(255, 255, 255, 0.05);
-    cursor: pointer;
-    text-align: center;
-    font-weight: bold;
-    transition: 0.4s;
-    text-transform: uppercase;
-}
-
-.item-estilo:hover {
-    background: var(--neon);
-    color: #000;
-    box-shadow: 0 0 25px var(--neon);
-}
-
-/* STAGE E MOLDURA DE FOGO */
-.stage-container {
+/* BACKGROUND COM A IMAGEM DA GARAGEM */
+.main-stage {
     flex: 1;
+    position: relative;
+    background: linear-gradient(var(--bg-overlay), var(--bg-overlay)), 
+                url('ChatGPT Image 2 de mai. de 2026, 09_26_10.jpg');
+    background-size: cover;
+    background-position: center;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+    padding: 40px;
 }
 
-.titulo-portal {
-    font-size: 3.2rem;
-    margin-bottom: 40px;
-    text-shadow: 0 0 20px var(--neon);
+/* LETREIRO LUMINOSO */
+.neon-title {
+    font-size: 3.5rem;
+    text-align: center;
+    color: #fff;
+    text-shadow: 0 0 10px #fff, 0 0 20px var(--neon-blue), 0 0 40px var(--neon-blue);
+    animation: flicker 3s infinite;
 }
 
-.moldura-fogo {
-    padding: 10px;
-    background: linear-gradient(0deg, var(--fogo-base), var(--fogo-brilho));
-    border-radius: 12px;
-    animation: pulsar-fogo 0.4s infinite alternate;
+@keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+    20%, 22%, 24%, 55% { opacity: 0.5; }
 }
 
-.vidro-interno {
-    background: #000;
-    padding: 5px;
+/* NAVEGAÇÃO LATERAL */
+.sidebar {
+    width: 320px;
+    background: rgba(15, 23, 42, 0.95);
+    border-right: 2px solid var(--neon-blue);
+    padding: 30px;
+}
+
+.nav-item {
+    padding: 18px;
+    margin-bottom: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
-}
-
-.vidro-interno img {
-    max-width: 600px;
-    max-height: 60vh; /* Mantém dentro da página */
-    display: block;
-    border-radius: 5px;
-}
-
-@keyframes pulsar-fogo {
-    from { box-shadow: 0 0 20px var(--fogo-base), 0 0 40px var(--fogo-base); }
-    to { box-shadow: 0 0 50px var(--fogo-brilho), 0 0 90px var(--fogo-base); }
-}
-
-/* BOTÕES NAVEGAÇÃO PAGINAS */
-.btn-voltar {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    border: 2px solid var(--neon);
-    background: none;
-    color: var(--neon);
-    padding: 10px 20px;
     cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
+    font-weight: bold;
 }
+
+.nav-item:hover {
+    background: var(--neon-blue);
+    color: #000;
+    box-shadow: 0 0 25px var(--neon-blue);
+    transform: translateX(10px);
+}
+
+/* PLAYER GLASSMORPHISM */
+.player-glass {
+    width: 100%;
+    max-width: 900px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--neon-pink);
+    border-radius: 20px;
+    padding: 30px;
+    display: none;
+    box-shadow: 0 0 50px rgba(255, 0, 230, 0.2);
+}
+
+iframe { width: 100%; height: 350px; border-radius: 12px; border: none; }
+audio { width: 100%; filter: invert(1); }
