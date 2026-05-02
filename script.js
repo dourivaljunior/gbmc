@@ -1,52 +1,33 @@
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbywSHZf36zGAywDEnCq6Y7tkt7aqUNdnP0ltHBAOH4sjtDFRHjQzoj0RhbsK4GJVJhNzw/exec";
-const DRIVE_RAW = "https://lh3.googleusercontent.com/d/";
+const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbywSHZf36zGAywDEnCq6Y7tkt7aqUNdnP0ltHBAOH4sjtDFRHjQzoj0RhbsK4GJVJhNzw/exec";
 
 const app = {
-    async fetchDados() {
-        const res = await fetch(SCRIPT_URL);
-        return await res.json();
+    async iniciar() {
+        try {
+            const resposta = await fetch(URL_SCRIPT);
+            const dados = await resposta.json();
+            this.carregarEstilosNoQuadro(dados);
+        } catch (erro) {
+            console.error("Falha na conexão profissional:", erro);
+        }
     },
 
-    async init() {
-        const dados = await this.fetchDados();
-        const container = document.getElementById('container-estilos');
-        if (!container) return;
+    carregarEstilosNoQuadro(dados) {
+        const quadro = document.getElementById('quadro-estilos');
+        if (!quadro) return;
 
         Object.keys(dados).forEach(estilo => {
-            const div = document.createElement('div');
-            div.className = 'box-estilo';
-            div.innerText = estilo;
-            div.onclick = () => location.href = `pag1.html?estilo=${estilo}`;
-            container.appendChild(div);
+            const item = document.createElement('div');
+            item.className = 'item-estilo';
+            item.innerText = estilo;
+            
+            // Lógica de abertura da pag1.html conforme solicitado
+            item.onclick = () => {
+                window.location.href = `pag1.html?estilo=${encodeURIComponent(estilo)}`;
+            };
+            
+            quadro.appendChild(item);
         });
-    },
-
-    async carregarBandasPag1(estilo) {
-        const dados = await this.fetchDados();
-        const grid = document.getElementById('grid-bandas');
-        document.getElementById('titulo-estilo').innerText = estilo;
-
-        Object.keys(dados[estilo]).forEach(banda => {
-            const div = document.createElement('div');
-            div.className = 'cintilante';
-            div.innerText = banda;
-            div.onclick = () => location.href = `pag2.html?estilo=${estilo}&banda=${banda}`;
-            grid.appendChild(div);
-        });
-    },
-
-    async carregarPlayerPag2() {
-        const params = new URLSearchParams(window.location.search);
-        const estilo = params.get('estilo');
-        const banda = params.get('banda');
-        const dados = await this.fetchDados();
-        const musica = dados[estilo][banda][0];
-
-        document.getElementById('nome-artista').innerText = banda + " - " + musica.titulo;
-        document.getElementById('pdf-viewer').src = `https://docs.google.com/viewer?srcid=${musica.letra}&embedded=true`;
-        document.getElementById('audio-orig').src = DRIVE_RAW + musica.musica;
-        document.getElementById('audio-bt').src = DRIVE_RAW + musica.bt;
     }
 };
 
-app.init();
+document.addEventListener('DOMContentLoaded', () => app.iniciar());
