@@ -5,13 +5,15 @@ const app = {
     view: 'estilos',
     currentStyle: null,
     currentBanda: null,
-    audioNodes: { main: new Audio(), bt: new Audio() },
-    ids: { main: null, bt: null },
 
     async init() {
-        const response = await fetch(SCRIPT_URL);
-        this.data = await response.json();
-        this.renderEstilos();
+        try {
+            const response = await fetch(SCRIPT_URL);
+            this.data = await response.json();
+            this.renderEstilos();
+        } catch (e) {
+            console.error("Erro ao carregar API:", e);
+        }
     },
 
     renderEstilos() {
@@ -46,63 +48,16 @@ const app = {
     },
 
     abrirPlayer(m) {
-        this.stopAudio('main');
-        this.stopAudio('bt');
         this.toggleUI('player');
         document.getElementById('musica-titulo').innerText = m.titulo;
+        
+        // Link Cifra
         document.getElementById('link-cifra').href = `https://drive.google.com/file/d/${m.letra}/view`;
         
-        // Armazena IDs para carregamento sob demanda
-        this.ids.main = m.musica;
-        this.ids.bt = m.bt;
-        
-        // Reseta labels
-        document.getElementById('btn-play-main').innerText = "▶ PLAY";
-        document.getElementById('btn-play-bt').innerText = "▶ PLAY";
-        
-        // Limpa fontes anteriores para evitar bugs
-        this.audioNodes.main.src = "";
-        this.audioNodes.bt.src = "";
-    },
-
-    async handleAudio(type) {
-        const audio = this.audioNodes[type];
-        const btn = document.getElementById(`btn-play-${type}`);
-        const fileId = this.ids[type];
-
-        if (!audio.paused) {
-            audio.pause();
-            btn.innerText = "▶ PLAY";
-            return;
-        }
-
-        // Se não houver fonte carregada, aplica o link de download direto do Google Drive
-        if (!audio.src || audio.src === window.location.href) {
-            btn.innerText = "⏳ CARREGANDO...";
-            // O link lh3 é o mais resiliente para streaming direto do Drive
-            audio.src = `https://lh3.googleusercontent.com/d/${fileId}`;
-            audio.load();
-        }
-
-        try {
-            await audio.play();
-            btn.innerText = "⏸ PAUSE";
-            
-            // Pausa o outro canal automaticamente
-            const outro = type === 'main' ? 'bt' : 'main';
-            this.stopAudio(outro);
-        } catch (e) {
-            btn.innerText = "❌ ERRO";
-            console.error("Erro ao tocar:", e);
-        }
-    },
-
-    stopAudio(type) {
-        const a = this.audioNodes[type];
-        const btn = document.getElementById(`btn-play-${type}`);
-        a.pause();
-        a.currentTime = 0;
-        if(btn) btn.innerText = "▶ PLAY";
+        // Técnica de Iframe Stream: Isso usa o player próprio do Google dentro do seu site.
+        // É a única forma que ignora bloqueios de CORS e cookies.
+        document.getElementById('frame-main').src = `https://docs.google.com/file/d/${m.musica}/preview`;
+        document.getElementById('frame-bt').src = `https://docs.google.com/file/d/${m.bt}/preview`;
     },
 
     createNavItem(text, action) {
