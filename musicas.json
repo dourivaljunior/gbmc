@@ -1,0 +1,12 @@
+{
+  "Rock": {
+    "Raul Seixas": [
+      {
+        "titulo": "Gita",
+        "musica": "gita.mp3",
+        "bt": "gitaBT.mp3",
+        "letra": "gita.txt"
+      }
+    ]
+  }
+}
