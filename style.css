@@ -1,37 +1,86 @@
 :root {
-    --bg: #0f172a;
-    --card: #1e293b;
-    --accent: #3b82f6;
-    --text: #f8fafc;
+    --neon-blue: #00f2ff;
+    --neon-pink: #ff00e6;
+    --bg-overlay: rgba(5, 7, 10, 0.8);
 }
 
-body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; }
-
-header { padding: 20px; border-bottom: 1px solid #334155; text-align: center; }
-header span { color: var(--accent); }
-
-.app-container { display: grid; grid-template-columns: 300px 1fr; height: calc(100vh - 80px); }
-
-.sidebar { background: #111827; padding: 20px; border-right: 1px solid #334155; }
-.sidebar ul { list-style: none; padding: 0; }
-.sidebar li { 
-    padding: 12px; background: var(--card); margin-bottom: 10px; 
-    border-radius: 8px; cursor: pointer; transition: 0.2s;
-}
-.sidebar li:hover { background: var(--accent); }
-
-.grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; padding: 20px; }
-
-.card-musica { 
-    background: var(--card); padding: 15px; border-radius: 12px; 
-    border: 1px solid #334155; text-align: center;
+body {
+    background-color: #000;
+    color: #fff;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    display: flex;
+    height: 100vh;
 }
 
-.btn-file { 
-    display: block; margin: 5px 0; padding: 8px; 
-    border-radius: 5px; text-decoration: none; font-size: 12px;
-    background: #334155; color: white;
+/* BACKGROUND COM A IMAGEM DA GARAGEM */
+.main-stage {
+    flex: 1;
+    position: relative;
+    background: linear-gradient(var(--bg-overlay), var(--bg-overlay)), 
+                url('ChatGPT Image 2 de mai. de 2026, 09_26_10.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
 }
-.btn-file:hover { background: var(--accent); }
 
-.hidden { display: none; }
+/* LETREIRO LUMINOSO */
+.neon-title {
+    font-size: 3.5rem;
+    text-align: center;
+    color: #fff;
+    text-shadow: 0 0 10px #fff, 0 0 20px var(--neon-blue), 0 0 40px var(--neon-blue);
+    animation: flicker 3s infinite;
+}
+
+@keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+    20%, 22%, 24%, 55% { opacity: 0.5; }
+}
+
+/* NAVEGAÇÃO LATERAL */
+.sidebar {
+    width: 320px;
+    background: rgba(15, 23, 42, 0.95);
+    border-right: 2px solid var(--neon-blue);
+    padding: 30px;
+}
+
+.nav-item {
+    padding: 18px;
+    margin-bottom: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
+    font-weight: bold;
+}
+
+.nav-item:hover {
+    background: var(--neon-blue);
+    color: #000;
+    box-shadow: 0 0 25px var(--neon-blue);
+    transform: translateX(10px);
+}
+
+/* PLAYER GLASSMORPHISM */
+.player-glass {
+    width: 100%;
+    max-width: 900px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--neon-pink);
+    border-radius: 20px;
+    padding: 30px;
+    display: none;
+    box-shadow: 0 0 50px rgba(255, 0, 230, 0.2);
+}
+
+iframe { width: 100%; height: 350px; border-radius: 12px; border: none; }
+audio { width: 100%; filter: invert(1); }
