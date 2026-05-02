@@ -1,86 +1,118 @@
 :root {
     --neon-blue: #00f2ff;
-    --neon-pink: #ff00e6;
-    --bg-overlay: rgba(5, 7, 10, 0.8);
+    --bg-dark: #020617;
+    --glass: rgba(255, 255, 255, 0.05);
 }
 
 body {
-    background-color: #000;
-    color: #fff;
-    font-family: 'Segoe UI', sans-serif;
+    background: var(--bg-dark);
+    color: white;
     margin: 0;
     display: flex;
     height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden;
 }
 
-/* BACKGROUND COM A IMAGEM DA GARAGEM */
-.main-stage {
-    flex: 1;
-    position: relative;
-    background: linear-gradient(var(--bg-overlay), var(--bg-overlay)), 
-                url('ChatGPT Image 2 de mai. de 2026, 09_26_10.jpg');
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px;
-}
-
-/* LETREIRO LUMINOSO */
-.neon-title {
-    font-size: 3.5rem;
-    text-align: center;
-    color: #fff;
-    text-shadow: 0 0 10px #fff, 0 0 20px var(--neon-blue), 0 0 40px var(--neon-blue);
-    animation: flicker 3s infinite;
-}
-
-@keyframes flicker {
-    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-    20%, 22%, 24%, 55% { opacity: 0.5; }
-}
-
-/* NAVEGAÇÃO LATERAL */
 .sidebar {
-    width: 320px;
-    background: rgba(15, 23, 42, 0.95);
+    width: 280px;
+    background: #050505;
     border-right: 2px solid var(--neon-blue);
-    padding: 30px;
+    padding: 20px;
+    box-shadow: 10px 0 20px rgba(0, 242, 255, 0.1);
+}
+
+.menu-label {
+    color: var(--neon-blue);
+    font-size: 1.2rem;
+    text-align: center;
+    border-bottom: 1px solid var(--neon-blue);
+    padding-bottom: 10px;
+    letter-spacing: 2px;
 }
 
 .nav-item {
-    padding: 18px;
-    margin-bottom: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 15px;
+    margin: 10px 0;
+    border: 1px solid var(--neon-blue);
     text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+    text-transform: uppercase;
     font-weight: bold;
 }
 
-.nav-item:hover {
+.nav-item:hover, .active-style {
     background: var(--neon-blue);
     color: #000;
-    box-shadow: 0 0 25px var(--neon-blue);
-    transform: translateX(10px);
+    box-shadow: 0 0 15px var(--neon-blue);
 }
 
-/* PLAYER GLASSMORPHISM */
-.player-glass {
+.main-stage {
+    flex: 1;
+    padding: 40px;
+    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('ChatGPT Image 2 de mai. de 2026, 09_26_10.jpg');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.neon-title-small {
+    font-size: 1.8rem;
+    color: #fff;
+    text-shadow: 0 0 10px var(--neon-blue);
+    margin-bottom: 20px;
+    white-space: nowrap;
+}
+
+.image-box {
+    border: 3px solid var(--neon-blue);
+    padding: 5px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px var(--neon-blue);
+    max-width: 500px;
+}
+
+.image-box img {
     width: 100%;
-    max-width: 900px;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--neon-pink);
-    border-radius: 20px;
-    padding: 30px;
-    display: none;
-    box-shadow: 0 0 50px rgba(255, 0, 230, 0.2);
+    border-radius: 5px;
+    display: block;
 }
 
-iframe { width: 100%; height: 350px; border-radius: 12px; border: none; }
+.btn-neon-blue {
+    background: none;
+    border: 1px solid var(--neon-blue);
+    color: var(--neon-blue);
+    padding: 8px 15px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.btn-neon-blue:hover {
+    background: var(--neon-blue);
+    color: #000;
+}
+
+.nav-controls {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+}
+
+.player-glass {
+    width: 90%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--neon-blue);
+    border-radius: 15px;
+    padding: 20px;
+    display: none;
+}
+
+iframe { width: 100%; height: 400px; border: none; border-radius: 10px; }
 audio { width: 100%; filter: invert(1); }
