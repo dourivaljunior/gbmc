@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Portal Garage Band - Bandas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <h2 style="color:var(--neon-blue)">ESTILO MUSICAL</h2>
+        <div id="container-estilos"></div>
+    </aside>
+
+    <main class="main-stage">
+        <div class="nav-buttons">
+            <button class="btn-nav" onclick="location.href='index.html'">INÍCIO</button>
+        </div>
+        
+        <h1 id="titulo-estilo" style="color:var(--fire-orange)">ROCK</h1>
+        <div id="grid-bandas" class="grid-bandas"></div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        // Lógica específica da pag1 para carregar bandas
+        window.onload = () => {
+            const estilo = new URLSearchParams(window.location.search).get('estilo');
+            app.carregarBandasPag1(estilo);
+        };
+    </script>
+</body>
+</html>
